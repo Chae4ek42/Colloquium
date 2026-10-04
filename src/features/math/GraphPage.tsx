@@ -3,6 +3,7 @@ import { KIND_LABEL, STATEMENTS, getStatement, type Statement } from '../../data
 import { displayName } from './present'
 import { searchStatements } from './search'
 import { StatementLink, useMathUi } from './ui'
+import { priorIds } from './relations'
 import './graph.css'
 
 const NODE_W = 210
@@ -326,7 +327,7 @@ function buildGraph(): GraphIndex {
   const outgoing = new Map<string, string[]>()
   const edges: Edge[] = []
   for (const item of STATEMENTS) {
-    for (const prior of item.dependsOn) {
+    for (const prior of priorIds(item.id)) {
       edges.push({ from: prior, to: item.id })
       pushMap(outgoing, prior, item.id)
       pushMap(incoming, item.id, prior)

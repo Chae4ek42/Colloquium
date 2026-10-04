@@ -30,4 +30,12 @@ export const DEPENDS: Record<string, string[]> = {
   'thm-4.7': ['lem-4.2', 'thm-2.9', 'thm-3.2', 'thm-2.1'],
   'thm-4.8': ['lem-4.3'],
   'thm-4.9': ['thm-4.8', 'lem-4.4'],
+  'cor-1': ['def-1.1-10', 'thm-1.3'],
+  'cor-2': ['def-1.1-10', 'thm-1.3'],
+  'cor-1-2': ['thm-1.6'],
+  'cor-2-2': ['thm-1.2'],
+  'cor-3': ['cor-1-2', 'cor-2-2'],
+  'task-1-2': ['cor-3', 'def-1-6'],
+  'ex-4.5-3': ['cor-3', 'cor-2-2'],
+  'thm-4.6': ['cor-4.4-1', 'cor-3', 'cor-2.8-2', 'lem-2.6'],
 }

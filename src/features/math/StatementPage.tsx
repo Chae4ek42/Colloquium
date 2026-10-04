@@ -1,5 +1,6 @@
 import { useEffect } from 'react'
-import { followsFrom, getStatement, leadsTo, statementsUsing, type Statement } from '../../data/math/bank'
+import { getStatement, type Statement } from '../../data/math/bank'
+import { followsFrom, leadsTo, usedIn } from './relations'
 import { displayName } from './present'
 import { StatementCard } from './StatementCard'
 import { StatementLink } from './ui'
@@ -25,18 +26,20 @@ export function StatementPage({ id, onBack }: { id: string; onBack: () => void }
 
   const priors = followsFrom(statement.id)
   const next = leadsTo(statement.id)
-  const used = statementsUsing(statement.id).filter((item) => item.id !== statement.id)
+  const used = usedIn(statement.id)
 
   return (
-    <main className="math-sheet">
+    <main className="math-sheet math-statement">
       <button type="button" className="text-button" onClick={onBack}>
         К вопросам
       </button>
-      <StatementCard statement={statement} />
-      <div className="math-rel-grid">
-        <RelationCard title="Следует из" items={priors} />
-        <RelationCard title="Из этого следует" items={next} />
-        <RelationCard title="Где используется" items={used} />
+      <div className="math-statement-layout">
+        <StatementCard statement={statement} />
+        <aside className="math-statement-side">
+          <RelationCard title="Следует из" items={priors} />
+          <RelationCard title="Из этого следует" items={next} />
+          <RelationCard title="Где используется" items={used} />
+        </aside>
       </div>
     </main>
   )
@@ -50,9 +53,7 @@ function RelationCard({ title, items }: { title: string; items: Statement[] }) {
         <ul className="math-rel">
           {items.map((item) => (
             <li key={item.id}>
-              <StatementLink id={item.id}>
-                {item.number ? displayName(item) : `${displayName(item)}, стр. ${item.bookPage}`}
-              </StatementLink>
+              <StatementLink id={item.id}>{displayName(item)}</StatementLink>
             </li>
           ))}
         </ul>

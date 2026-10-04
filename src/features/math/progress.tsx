@@ -1,10 +1,5 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from 'react'
-import {
-  EMPTY_PROGRESS,
-  recordAnswer,
-  toggleLearned,
-  type ProgressState,
-} from './progress-model'
+import { EMPTY_PROGRESS, recordAnswer, toggleLearned, type ProgressState } from './progress-model'
 
 const STORAGE_KEY = 'colloquium-progress-v1'
 

@@ -91,7 +91,7 @@ export function CatalogPage({ mode }: { mode: 'all' | 'learned' }) {
       ) : (
         <div className="math-bento-stack">
           {visible.map((item) => (
-            <StatementCard key={item.id} statement={item} />
+            <StatementCard key={item.id} statement={item} fold />
           ))}
         </div>
       )}

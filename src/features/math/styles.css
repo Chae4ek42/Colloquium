@@ -25,6 +25,29 @@
   gap: 14px;
 }
 
+.math-stream-filter {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.math-stream-option {
+  border: 1px solid rgba(17, 17, 17, 0.14);
+  border-radius: 999px;
+  background: #fff;
+  color: #222;
+  padding: 6px 12px;
+  font: inherit;
+  font-size: 0.84rem;
+  cursor: pointer;
+}
+
+.math-stream-option.is-active {
+  border-color: #111;
+  background: #111;
+  color: #fff;
+}
+
 .math-hero-card,
 .math-question,
 .math-bento,
@@ -341,6 +364,49 @@
   --kind-bg: rgba(82, 82, 82, 0.06);
 }
 
+.math-bento.is-folded {
+  gap: 0;
+  padding: 10px 14px;
+}
+
+.math-bento-toggle {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--kind, #111);
+  font: inherit;
+  font-size: 1.15rem;
+  font-weight: 650;
+  line-height: 1.35;
+  text-align: left;
+  cursor: pointer;
+  min-width: 0;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+h2.math-bento-toggle,
+p.math-bento-toggle {
+  cursor: default;
+}
+
+.math-open {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 999px;
+  color: #333;
+  text-decoration: none;
+}
+
+.math-open:hover {
+  background: rgba(17, 17, 17, 0.06);
+  color: #111;
+}
+
 .math-bento {
   display: grid;
   gap: 12px;
@@ -352,7 +418,6 @@
   box-shadow: 0 8px 24px rgba(17, 17, 17, 0.06);
 }
 
-.math-bento-head,
 .math-bento-actions,
 .math-photo-head {
   display: flex;
@@ -362,7 +427,15 @@
   justify-content: space-between;
 }
 
+.math-bento-head {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 8px 12px;
+  align-items: center;
+}
+
 .math-bento-actions {
+  flex-wrap: nowrap;
   align-items: center;
 }
 
@@ -448,14 +521,66 @@
 }
 
 .math-photo-dialog {
-  width: min(920px, 100%);
-  max-height: min(88vh, 920px);
+  width: min(880px, 100%);
+  max-height: min(92vh, 980px);
   overflow: auto;
   display: grid;
+  align-content: start;
+  gap: 0;
+  padding: 0;
+  border-radius: 18px;
+  background: #f3f3f3;
+  box-shadow: 0 24px 70px rgba(17, 17, 17, 0.28);
+}
+
+.math-photo-head {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   gap: 12px;
-  padding: 16px;
-  border-radius: 22px;
+  padding: 12px 16px;
   background: #fff;
+  border-bottom: 1px solid rgba(17, 17, 17, 0.08);
+}
+
+.math-photo-head p {
+  margin: 0;
+  font-weight: 650;
+}
+
+.math-pages {
+  display: grid;
+  gap: 20px;
+  padding: 18px;
+}
+
+.math-page {
+  width: 100%;
+  border: 0;
+  border-radius: 10px;
+  background: #fff;
+  box-shadow: 0 10px 28px rgba(17, 17, 17, 0.12);
+}
+
+.math-statement {
+  width: min(1120px, 100%);
+}
+
+.math-statement-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.45fr) minmax(240px, 0.7fr);
+  gap: 16px;
+  align-items: start;
+}
+
+.math-statement-side {
+  display: grid;
+  gap: 12px;
+  position: sticky;
+  top: 12px;
 }
 
 .math-quick {
@@ -501,8 +626,13 @@
 }
 
 @media (max-width: 900px) {
-  .math-rel-grid {
+  .math-rel-grid,
+  .math-statement-layout {
     grid-template-columns: 1fr;
+  }
+
+  .math-statement-side {
+    position: static;
   }
 }
 
@@ -514,6 +644,31 @@
   .math-question-count {
     grid-column: 2;
   }
+}
+
+.math-cite,
+.math-cite:visited {
+  color: inherit;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 2px;
+}
+
+.math-cites {
+  display: grid;
+  gap: 6px;
+  margin: 12px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.math-cites li {
+  margin: 0;
+  padding: 8px 10px;
+  border-radius: 10px;
+  background: rgba(17, 17, 17, 0.04);
+  color: #333;
+  font-size: 0.82rem;
+  line-height: 1.45;
 }
 
 .math-inline-links {

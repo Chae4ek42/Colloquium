@@ -4,14 +4,13 @@ import { useIsMobileTouch } from '../../shared/lib/media'
 import {
   flowText,
   getStatement,
-  leadsTo,
-  statementsUsing,
   type Statement,
 } from '../../data/math/bank'
 import type { StreamMark } from '../../data/math/types'
 import { useProgress } from './progress'
 import { PagePhoto } from './PagePhoto'
 import { displayName, splitParts } from './present'
+import { leadsTo, usedIn } from './relations'
 import { MathText } from './render-math'
 
 interface MathUi {
@@ -114,10 +113,12 @@ export function StatementLink({
   id,
   children,
   className = 'math-link',
+  title,
 }: {
   id: string
   children: ReactNode
   className?: string
+  title?: string
 }) {
   const ui = useMathUi()
   const mobile = useIsMobileTouch()
@@ -140,7 +141,7 @@ export function StatementLink({
     <a
       href={href}
       className={className}
-      title={mobile ? 'Долгое нажатие — краткий просмотр' : 'Колёсико — краткий просмотр'}
+      title={title ?? (mobile ? 'Долгое нажатие — краткий просмотр' : 'Колёсико — краткий просмотр')}
       onClick={onClick}
       onAuxClick={onAuxClick}
       onMouseDown={(event) => {
@@ -166,7 +167,7 @@ function QuickView({
 }) {
   const ui = useMathUi()
   const statement = getStatement(id)
-  const used = statement ? statementsUsing(id).slice(0, 8) : []
+  const used = statement ? usedIn(id).slice(0, 8) : []
   const next = statement ? leadsTo(id).slice(0, 8) : []
 
   return (
@@ -182,7 +183,6 @@ function QuickView({
         {statement ? (
           <>
             <header className="math-quick-head">
-              <p className="math-kicker">стр. {statement.bookPage}</p>
               <h2>{displayName(statement)}</h2>
               <div className="math-bento-actions">
                 <PagePhoto statement={statement} />
@@ -235,13 +235,13 @@ function QuickView({
 function QuickParts({ statement }: { statement: Statement }) {
   const parts = splitParts(statement)
   const formulation = parts.latex ? (
-    <MathText source={parts.formulation} />
+    <MathText source={parts.formulation} contextId={statement.id} />
   ) : (
     <p className="math-prose">{parts.formulation}</p>
   )
   const proof = parts.proof ? (
     parts.latex ? (
-      <MathText source={parts.proof} />
+      <MathText source={parts.proof} contextId={statement.id} />
     ) : (
       <p className="math-prose">{parts.proof}</p>
     )

@@ -1,5 +1,87 @@
 .drill-page {
   gap: 20px;
+  width: min(1120px, 100%);
+}
+
+.drill-setup-layout {
+  display: grid;
+  grid-template-columns: minmax(280px, 380px) minmax(0, 1fr);
+  gap: 16px;
+  align-items: start;
+}
+
+.drill-questions {
+  min-width: 0;
+  padding: 16px;
+  border: 1px solid rgba(17, 17, 17, 0.1);
+  border-radius: 16px;
+  background: #fff;
+}
+
+.drill-questions h2 {
+  margin: 0 0 12px;
+  font-size: 0.78rem;
+  letter-spacing: 0.04em;
+}
+
+.drill-questions ul {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  max-height: min(70vh, 720px);
+  overflow: auto;
+}
+
+.drill-questions li {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 10px;
+  align-items: start;
+  padding: 8px 4px;
+  border-bottom: 1px solid rgba(17, 17, 17, 0.06);
+}
+
+.drill-questions li.is-out .drill-q-title {
+  color: #8a8a8a;
+}
+
+.drill-q-num {
+  font-variant-numeric: tabular-nums;
+  color: #666;
+}
+
+.drill-q-title {
+  min-width: 0;
+  line-height: 1.35;
+}
+
+.drill-questions button {
+  border: 1px solid rgba(17, 17, 17, 0.16);
+  border-radius: 999px;
+  background: #fff;
+  color: #222;
+  padding: 4px 10px;
+  font: inherit;
+  font-size: 0.78rem;
+  cursor: pointer;
+}
+
+.drill-questions li.is-out button {
+  border-color: #111;
+  background: #111;
+  color: #fff;
+}
+
+@media (max-width: 860px) {
+  .drill-setup-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .drill-questions ul {
+    max-height: none;
+  }
 }
 
 .drill-head {
