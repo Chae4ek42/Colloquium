@@ -2,7 +2,6 @@ import { createContext, useContext, useEffect, useState, type MouseEvent, type R
 import { useLongPress } from '../../shared/lib/useLongPress'
 import { useIsMobileTouch } from '../../shared/lib/media'
 import {
-  KIND_LABEL,
   flowText,
   getStatement,
   leadsTo,
@@ -11,6 +10,9 @@ import {
 } from '../../data/math/bank'
 import type { StreamMark } from '../../data/math/types'
 import { useProgress } from './progress'
+import { PagePhoto } from './PagePhoto'
+import { displayName, splitParts } from './present'
+import { MathText } from './render-math'
 
 interface MathUi {
   openStatement: (id: string) => void
@@ -73,6 +75,7 @@ export function streamText(mark: StreamMark | undefined): string | null {
 }
 
 export function StatementBody({ statement }: { statement: Statement }) {
+  if (statement.latex) return <MathText source={statement.latex} />
   const text = statement.formulation ?? flowText(statement.text)
   return <p className="math-prose">{text}</p>
 }
@@ -83,15 +86,26 @@ export function LearnedButton({ id }: { id: string }) {
   return (
     <button
       type="button"
-      className={learned ? 'math-learned is-on' : 'math-learned'}
+      className={learned ? 'math-check is-on' : 'math-check'}
       aria-pressed={learned}
+      aria-label={learned ? 'Выучено' : 'Не выучено'}
+      title={learned ? 'Выучено' : 'Отметить выученным'}
       onClick={(event) => {
         event.preventDefault()
         event.stopPropagation()
         progress.toggle(id)
       }}
     >
-      {learned ? 'Выучено' : 'Не выучено'}
+      <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+        <path
+          d="M5 12.5 9.2 17 19 7"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2.2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      </svg>
     </button>
   )
 }
@@ -159,6 +173,7 @@ function QuickView({
     <div className="math-quick-backdrop" onClick={onClose}>
       <article
         className="math-quick"
+        data-kind={statement?.kind}
         role="dialog"
         aria-modal="true"
         aria-label="Краткий просмотр"
@@ -167,20 +182,20 @@ function QuickView({
         {statement ? (
           <>
             <header className="math-quick-head">
-              <p className="math-kicker">
-                {KIND_LABEL[statement.kind]}
-                {statement.number ? ` ${statement.number}` : ''} · стр. {statement.bookPage}
-              </p>
-              <h2>{statement.title}</h2>
-              <LearnedButton id={statement.id} />
+              <p className="math-kicker">стр. {statement.bookPage}</p>
+              <h2>{displayName(statement)}</h2>
+              <div className="math-bento-actions">
+                <PagePhoto statement={statement} />
+                <LearnedButton id={statement.id} />
+              </div>
             </header>
-            <StatementBody statement={statement} />
+            <QuickParts statement={statement} />
             {next.length ? (
               <p className="math-inline-links">
                 Из этого следует:{' '}
                 {next.map((item) => (
                   <StatementLink key={item.id} id={item.id}>
-                    {item.title}
+                    {displayName(item)}
                   </StatementLink>
                 ))}
               </p>
@@ -190,7 +205,7 @@ function QuickView({
                 Используется в:{' '}
                 {used.map((item) => (
                   <StatementLink key={item.id} id={item.id}>
-                    {item.title}
+                    {displayName(item)}
                   </StatementLink>
                 ))}
               </p>
@@ -213,6 +228,36 @@ function QuickView({
           <p>Положение не найдено.</p>
         )}
       </article>
+    </div>
+  )
+}
+
+function QuickParts({ statement }: { statement: Statement }) {
+  const parts = splitParts(statement)
+  const formulation = parts.latex ? (
+    <MathText source={parts.formulation} />
+  ) : (
+    <p className="math-prose">{parts.formulation}</p>
+  )
+  const proof = parts.proof ? (
+    parts.latex ? (
+      <MathText source={parts.proof} />
+    ) : (
+      <p className="math-prose">{parts.proof}</p>
+    )
+  ) : null
+  return (
+    <div className="math-bento-stack">
+      <section className="math-bento-block">
+        <h3>Формулировка</h3>
+        {formulation}
+      </section>
+      {proof ? (
+        <section className="math-bento-block">
+          <h3>Доказательство</h3>
+          {proof}
+        </section>
+      ) : null}
     </div>
   )
 }

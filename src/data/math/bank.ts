@@ -1,6 +1,7 @@
 import statementsJson from './statements.json' with { type: 'json' }
 import { DEPENDS } from './depends'
 import { FORMULATIONS } from './formulations'
+import { LATEX } from './latex'
 import { EXAM_QUESTIONS } from './questions'
 import type { ExamQuestion, StatementKind, StatementRecord } from './types'
 
@@ -8,7 +9,9 @@ const RAW = statementsJson as StatementRecord[]
 
 export interface Statement extends StatementRecord {
   formulation: string | null
+  latex: string | null
   pageSrc: string
+  pageSrcs: string[]
 }
 
 function pageSrc(bookPage: number): string {
@@ -16,11 +19,14 @@ function pageSrc(bookPage: number): string {
 }
 
 function decorate(record: StatementRecord): Statement {
+  const pages = record.bookPages?.length ? record.bookPages : [record.bookPage]
   return {
     ...record,
     dependsOn: DEPENDS[record.id] ?? [],
     formulation: FORMULATIONS[record.id] ?? null,
+    latex: LATEX[record.id]?.trim() ? LATEX[record.id] : null,
     pageSrc: pageSrc(record.bookPage),
+    pageSrcs: pages.map(pageSrc),
   }
 }
 

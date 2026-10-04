@@ -34,6 +34,10 @@ describe('routes', () => {
     assert.deepEqual(parsePath('/p/thm-1.5'), { page: 'statement', statementId: 'thm-1.5' })
     assert.equal(isKnownPath('/p/thm-1.5'), true)
     assert.equal(isKnownPath('/graph'), true)
+    assert.equal(isKnownPath('/catalog'), true)
+    assert.equal(isKnownPath('/learned'), true)
+    assert.deepEqual(parsePath('/catalog'), { page: 'catalog' })
+    assert.deepEqual(parsePath('/learned'), { page: 'learned' })
   })
 
   it('неизвестный путь отдаёт home при парсинге', () => {
@@ -73,6 +77,8 @@ describe('routes', () => {
     assert.equal(navItems('primary').length > 0, true)
     assert.equal(navItems('primary').some((page) => page.id === 'train'), true)
     assert.equal(navItems('primary').some((page) => page.id === 'graph'), true)
+    assert.equal(navItems('primary').some((page) => page.id === 'catalog'), true)
+    assert.equal(navItems('primary').some((page) => page.id === 'learned'), true)
     assert.equal(navItems('primary').some((page) => page.id === 'vocab'), false)
     assert.equal(navItems('primary').some((page) => page.id === 'kana'), false)
     assert.equal(

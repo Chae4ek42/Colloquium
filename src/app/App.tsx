@@ -12,6 +12,7 @@ import { TrainPage } from '../features/vocab/TrainPage'
 import { TheoryPage } from '../features/theory/TheoryPage'
 import { AnalyticsPage } from '../features/analytics/AnalyticsPage'
 import { AccountGate } from '../features/accounts/AccountGate'
+import { CatalogPage } from '../features/math/CatalogPage'
 import { ColloquiumHome } from '../features/math/HomePage'
 import { DrillPage } from '../features/math/DrillPage'
 import { GraphPage } from '../features/math/GraphPage'
@@ -44,6 +45,10 @@ function AppPageView({
   switch (page) {
     case 'home':
       return <ColloquiumHome />
+    case 'catalog':
+      return <CatalogPage mode="all" />
+    case 'learned':
+      return <CatalogPage mode="learned" />
     case 'train':
       return <DrillPage />
     case 'graph':

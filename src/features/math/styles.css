@@ -1,34 +1,58 @@
-.math-home {
+.math-home,
+.math-sheet,
+.math-catalog {
   display: grid;
   gap: 18px;
+  width: min(720px, 100%);
+  margin-inline: auto;
 }
 
 .math-program,
 .math-note,
-.math-stream {
+.math-stream,
+.math-empty,
+.math-catalog-meta {
   margin: 0;
   color: var(--muted-strong);
 }
 
+.math-empty {
+  padding: 8px 0 24px;
+}
+
 .math-questions {
   display: grid;
-  gap: 10px;
+  gap: 14px;
+}
+
+.math-hero-card,
+.math-question,
+.math-bento,
+.math-rel-card {
+  border: 1px solid #e7e7e7;
+  border-radius: 22px;
+  background: #fff;
+}
+
+.math-hero-card {
+  display: grid;
+  gap: 8px;
+  padding: 18px 18px 16px;
 }
 
 .math-question {
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  background: #fff;
-  padding: 12px 14px;
+  position: relative;
+  padding: 6px 16px 8px;
 }
 
 .math-question summary {
   display: grid;
-  grid-template-columns: auto 1fr auto;
-  gap: 10px;
-  align-items: baseline;
+  grid-template-columns: auto minmax(0, 1fr) auto auto;
+  gap: 12px;
+  align-items: center;
   cursor: pointer;
   list-style: none;
+  padding: 12px 0;
 }
 
 .math-question summary::-webkit-details-marker {
@@ -36,38 +60,42 @@
 }
 
 .math-question-num {
-  color: var(--accent);
+  color: #111;
   font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.04em;
+}
+
+.math-question-title {
+  min-width: 0;
+  font-weight: 650;
 }
 
 .math-question-count,
 .math-kicker {
-  color: var(--muted);
-  font-size: 0.92rem;
-}
-
-.math-question-body,
-.math-sheet,
-.math-card {
-  display: grid;
-  gap: 12px;
+  color: #666;
+  font-size: 0.82rem;
 }
 
 .math-question-body {
-  padding-top: 12px;
+  display: grid;
+  gap: 12px;
+  padding: 0 0 14px;
 }
 
-.math-items,
+.math-pages {
+  display: grid;
+  gap: 16px;
+}
+
 .math-rel,
 .math-edges {
   display: grid;
-  gap: 14px;
+  gap: 8px;
   margin: 0;
   padding: 0;
   list-style: none;
 }
-
-.math-item-head,
 .math-sheet-head,
 .math-quick-head,
 .math-quick-actions,
@@ -77,6 +105,13 @@
   flex-wrap: wrap;
   gap: 8px 12px;
   align-items: center;
+}
+
+.math-items > li {
+  display: grid;
+  gap: 8px;
+  padding: 12px 0;
+  border-top: 1px solid rgba(17, 17, 17, 0.08);
 }
 
 .math-setup {
@@ -96,21 +131,45 @@
 .math-grade button,
 .math-learned {
   border: 1px solid var(--border);
-  border-radius: 10px;
+  border-radius: 999px;
   background: #fff;
   color: inherit;
-  padding: 8px 10px;
+  padding: 6px 12px;
+  font: inherit;
+  font-size: 0.84rem;
 }
 
-.math-learned.is-on {
-  background: var(--accent-soft);
-  border-color: transparent;
+.math-check {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  background: transparent;
+  color: #8a8a8a;
+  cursor: pointer;
 }
 
-.math-link {
-  color: inherit;
-  font-weight: 650;
-  text-underline-offset: 3px;
+.math-check.is-on {
+  color: var(--kind, #111);
+  background: color-mix(in srgb, var(--kind, #111) 12%, transparent);
+}
+
+.math-link,
+.math-link:visited,
+.math-graph-toc a,
+.math-graph-toc a:visited {
+  color: #111;
+  text-decoration-color: #111;
+}
+
+.math-bento-name,
+.math-bento-name:visited,
+.math-quick h2 {
+  color: var(--kind, #111);
+  text-decoration-color: color-mix(in srgb, var(--kind, #111) 45%, transparent);
 }
 
 .math-prose,
@@ -119,18 +178,78 @@
   line-height: 1.55;
 }
 
+.math-prose p {
+  margin: 0 0 0.75em;
+}
+
+.math-prose .katex-display {
+  margin: 0.6em 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
 .math-source {
   white-space: pre-wrap;
 }
 
-.math-sheet {
-  padding-bottom: 40px;
+.math-sheet h1,
+.math-sheet h2 {
+  font-weight: 650;
+  letter-spacing: -0.03em;
+}
+
+.math-sheet h2 {
+  margin: 0 0 8px;
+  font-size: 0.78rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.math-sheet > .text-button {
+  justify-self: start;
 }
 
 .math-page {
-  width: min(100%, 820px);
+  width: min(100%, 860px);
   border: 1px solid var(--border);
-  border-radius: 12px;
+  background: #fff;
+}
+
+.math-source-fold {
+  color: var(--muted-strong);
+}
+
+.math-source-fold summary {
+  cursor: pointer;
+  width: fit-content;
+}
+
+.math-catalog-list {
+  border-top: 1px solid rgba(17, 17, 17, 0.08);
+}
+
+.math-catalog-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 12px;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(17, 17, 17, 0.08);
+}
+
+.math-catalog-main {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+
+.math-catalog-title {
+  font-size: 1.02rem;
+}
+
+.math-catalog-row.is-learned .math-catalog-title {
+  font-weight: 700;
 }
 
 .math-quick-backdrop {
@@ -140,19 +259,261 @@
   display: grid;
   place-items: center;
   padding: 20px;
-  background: rgba(17, 17, 17, 0.28);
+  background: rgba(17, 17, 17, 0.45);
 }
 
 .math-quick {
-  width: min(720px, 100%);
-  max-height: min(80vh, 760px);
+  width: min(680px, 100%);
+  max-height: min(86vh, 860px);
   overflow: auto;
   display: grid;
   gap: 12px;
   padding: 18px;
-  border-radius: 16px;
+  border: 0;
+  border-radius: 22px;
   background: #fff;
-  box-shadow: 0 16px 50px rgba(0, 0, 0, 0.16);
+}
+
+.math-quick h2,
+.math-bento-name {
+  margin: 0;
+  font-size: 1.28rem;
+  letter-spacing: -0.03em;
+  font-weight: 700;
+}
+
+.math-bento-stack {
+  display: grid;
+  gap: 12px;
+}
+
+.math-bento,
+.math-quick {
+  --kind: #444;
+  --kind-bg: #fff;
+}
+
+.math-bento[data-kind='definition'],
+.math-quick[data-kind='definition'] {
+  --kind: #1b7a45;
+  --kind-bg: rgba(27, 122, 69, 0.07);
+}
+
+.math-bento[data-kind='theorem'],
+.math-quick[data-kind='theorem'] {
+  --kind: #b42318;
+  --kind-bg: rgba(180, 35, 24, 0.07);
+}
+
+.math-bento[data-kind='lemma'],
+.math-quick[data-kind='lemma'] {
+  --kind: #1d4f91;
+  --kind-bg: rgba(29, 79, 145, 0.07);
+}
+
+.math-bento[data-kind='remark'],
+.math-quick[data-kind='remark'] {
+  --kind: #c2410c;
+  --kind-bg: rgba(194, 65, 12, 0.08);
+}
+
+.math-bento[data-kind='corollary'],
+.math-quick[data-kind='corollary'] {
+  --kind: #6d28d9;
+  --kind-bg: rgba(109, 40, 217, 0.07);
+}
+
+.math-bento[data-kind='axiom'],
+.math-quick[data-kind='axiom'] {
+  --kind: #0f766e;
+  --kind-bg: rgba(15, 118, 110, 0.08);
+}
+
+.math-bento[data-kind='principle'],
+.math-quick[data-kind='principle'] {
+  --kind: #a16207;
+  --kind-bg: rgba(161, 98, 7, 0.09);
+}
+
+.math-bento[data-kind='example'],
+.math-quick[data-kind='example'] {
+  --kind: #525252;
+  --kind-bg: rgba(82, 82, 82, 0.06);
+}
+
+.math-bento {
+  display: grid;
+  gap: 12px;
+  padding: 16px 16px 14px;
+  background: #fff;
+  border-color: rgba(17, 17, 17, 0.1);
+  border-left: 3px solid var(--kind, #444);
+  border-radius: 14px;
+  box-shadow: 0 8px 24px rgba(17, 17, 17, 0.06);
+}
+
+.math-bento-head,
+.math-bento-actions,
+.math-photo-head {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 12px;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.math-bento-actions {
+  align-items: center;
+}
+
+.math-bento-name-wrap {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+
+.math-bento-block {
+  min-width: 0;
+  padding: 12px 14px;
+  border: 1px solid rgba(17, 17, 17, 0.1);
+  border-radius: 10px;
+  background: #fff;
+}
+
+.math-bento-block h3 {
+  margin: 0 0 8px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--kind, #666);
+}
+
+.math-bento-fold {
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.72);
+  border: 1px solid color-mix(in srgb, var(--kind, #111) 16%, transparent);
+}
+
+.math-bento-fold summary {
+  cursor: pointer;
+  padding: 12px 14px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--kind, #666);
+}
+
+.math-examples {
+  display: grid;
+  gap: 14px;
+}
+
+.math-example {
+  display: grid;
+  gap: 6px;
+}
+
+.math-example + .math-example {
+  padding-top: 12px;
+  border-top: 1px solid rgba(17, 17, 17, 0.08);
+}
+
+.math-example-name,
+.math-example-name:visited {
+  color: #525252;
+  font-weight: 650;
+}
+
+.math-bento-fold .math-bento-block {
+  padding-top: 0;
+  background: transparent;
+}
+
+.math-photo {
+  border: 1px solid #111;
+  border-radius: 999px;
+  background: #fff;
+  color: #111;
+  padding: 6px 12px;
+  font: inherit;
+  font-size: 0.84rem;
+  cursor: pointer;
+}
+
+.math-photo:hover {
+  background: #111;
+  color: #fff;
+}
+
+.math-photo-dialog {
+  width: min(920px, 100%);
+  max-height: min(88vh, 920px);
+  overflow: auto;
+  display: grid;
+  gap: 12px;
+  padding: 16px;
+  border-radius: 22px;
+  background: #fff;
+}
+
+.math-quick {
+  background: #fff;
+  border: 1px solid rgba(17, 17, 17, 0.1);
+  border-left: 3px solid var(--kind, #444);
+  box-shadow: 0 8px 24px rgba(17, 17, 17, 0.1);
+}
+
+.math-photo-head p {
+  margin: 0;
+  font-weight: 650;
+}
+
+.math-rel-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+
+.math-rel-card {
+  display: grid;
+  align-content: start;
+  gap: 8px;
+  padding: 14px 16px;
+}
+
+.math-rel-card h2 {
+  margin: 0;
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #666;
+}
+
+.math-catalog .vocab-controls {
+  display: grid;
+  gap: 12px;
+  padding: 14px 16px;
+  border: 1px solid #e7e7e7;
+  border-radius: 22px;
+  background: #fff;
+}
+
+@media (max-width: 900px) {
+  .math-rel-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 720px) {
+  .math-question summary {
+    grid-template-columns: auto minmax(0, 1fr) auto;
+  }
+
+  .math-question-count {
+    grid-column: 2;
+  }
 }
 
 .math-inline-links {

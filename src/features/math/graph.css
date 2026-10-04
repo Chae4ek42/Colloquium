@@ -1,0 +1,361 @@
+.math-graph-page {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  gap: 12px;
+  height: calc(100dvh - 12rem);
+  min-width: 0;
+  min-height: 0;
+  color: #111;
+  background: #fff;
+}
+
+.math-graph-page h1 {
+  font-size: clamp(1.6rem, 2.4vw, 2.1rem);
+  line-height: 1.05;
+  letter-spacing: -0.04em;
+}
+
+.math-graph-head {
+  display: grid;
+  gap: 4px;
+}
+
+.math-graph-lead,
+.math-graph-sub,
+.math-graph-quiet,
+.math-graph-meta,
+.math-graph-count,
+.math-graph-focus-title {
+  margin: 0;
+  color: #111;
+}
+
+.math-graph-lead {
+  max-width: 42rem;
+  line-height: 1.4;
+}
+
+.math-graph-sub,
+.math-graph-quiet,
+.math-graph-meta,
+.math-graph-count {
+  font-size: 0.92rem;
+  line-height: 1.4;
+}
+
+.math-graph-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(280px, 360px);
+  gap: 12px;
+  align-items: stretch;
+  min-width: 0;
+  min-height: 0;
+  height: 100%;
+}
+
+.math-graph-stage {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  position: relative;
+  min-height: 0;
+  height: 100%;
+  border: 1px solid #e7e7e7;
+  border-radius: 22px;
+  background-color: #f4f4f4;
+  background-image: radial-gradient(#d0d0d0 1px, transparent 1px);
+  background-size: 18px 18px;
+  overflow: hidden;
+}
+
+.math-graph-svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  background: transparent;
+  touch-action: none;
+  cursor: grab;
+  user-select: none;
+}
+
+.math-graph-svg.is-panning,
+.math-graph-svg.is-panning .math-graph-node {
+  cursor: grabbing;
+}
+
+.math-graph-tools {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 8px 10px;
+  border-bottom: 1px solid #ececec;
+  background: rgba(255, 255, 255, 0.92);
+}
+
+.math-graph-fit,
+.math-graph-hit {
+  border: 1px solid #111;
+  background: #fff;
+  color: #111;
+  font: inherit;
+  cursor: pointer;
+}
+
+.math-graph-fit {
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-size: 0.84rem;
+}
+
+.math-graph-fit:hover,
+.math-graph-hit:hover,
+.math-graph-hit.is-current {
+  background: #111;
+  color: #fff;
+}
+
+.math-graph-edge {
+  fill: none;
+  stroke: #8d8d8d;
+  stroke-width: 1.35;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.math-graph-node {
+  cursor: pointer;
+}
+
+.math-graph-node rect {
+  fill: #fff;
+  stroke: #111;
+  stroke-width: 1.15;
+  filter: drop-shadow(0 8px 16px rgba(17, 17, 17, 0.06));
+}
+
+.math-graph-node.is-current rect {
+  fill: #111;
+  stroke: #111;
+}
+
+.math-graph-node text {
+  fill: #111;
+  font-family: Manrope, 'Segoe UI', sans-serif;
+  pointer-events: none;
+}
+
+.math-graph-node.is-current text {
+  fill: #fff;
+}
+
+.math-graph-badge {
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.math-graph-label {
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.math-graph-node:hover rect,
+.math-graph-node:focus-visible rect {
+  stroke-width: 2.5;
+}
+
+.math-graph-node:focus {
+  outline: none;
+}
+
+.math-graph-empty {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  margin: 0;
+  padding: 24px;
+  color: #111;
+  text-align: center;
+}
+
+.math-graph-side {
+  display: grid;
+  align-content: start;
+  gap: 12px;
+  min-width: 0;
+  max-height: calc(100vh - 210px);
+  overflow: auto;
+  padding: 14px;
+  border: 1px solid #e6e6e6;
+  border-radius: 22px;
+  background: #fff;
+}
+
+.math-graph-search {
+  display: grid;
+  gap: 6px;
+  color: #111;
+  font-size: 0.92rem;
+}
+
+.math-graph-search input {
+  width: 100%;
+  border: 1px solid #e4e4e4;
+  border-radius: 999px;
+  background: #f7f7f7;
+  color: #111;
+  padding: 8px 12px;
+  font: inherit;
+}
+
+.math-graph-search input::placeholder {
+  color: #bbb;
+  opacity: 1;
+}
+
+.math-graph-search input:focus {
+  outline: 2px solid #111;
+  outline-offset: 1px;
+}
+
+.math-graph-hits {
+  display: grid;
+  gap: 0;
+  max-height: 280px;
+  margin: 0;
+  padding: 0;
+  overflow: auto;
+  list-style: none;
+  border: 1px solid #111;
+}
+
+.math-graph-hit {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 8px;
+  align-items: baseline;
+  width: 100%;
+  padding: 8px 10px;
+  border: 0;
+  border-bottom: 1px solid #bbb;
+  text-align: left;
+}
+
+.math-graph-hits li:last-child .math-graph-hit {
+  border-bottom: 0;
+}
+
+.math-graph-hit-badge {
+  font-weight: 700;
+}
+
+.math-graph-hit-title {
+  line-height: 1.35;
+}
+
+.math-graph-focus {
+  display: grid;
+  gap: 8px;
+  padding-top: 12px;
+  border-top: 1px solid #111;
+}
+
+.math-graph-focus-title {
+  font-size: 1.02rem;
+  font-weight: 650;
+  line-height: 1.35;
+}
+
+.math-graph-open,
+.math-graph-open:visited,
+.math-graph-open:hover {
+  color: #111;
+  font-weight: 650;
+  text-underline-offset: 3px;
+}
+
+.math-graph-focus-line {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  align-items: baseline;
+  margin: 0;
+  font-weight: 650;
+}
+
+.math-graph-focus-line span {
+  min-width: 0;
+}
+
+.math-graph-toc {
+  display: grid;
+  gap: 14px;
+}
+
+.math-graph-toc-group h2 {
+  margin: 0 0 6px;
+  font-size: 0.78rem;
+  font-weight: 650;
+  letter-spacing: 0;
+  text-transform: none;
+  color: #666;
+}
+
+.math-graph-toc-group ul {
+  display: grid;
+  gap: 2px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.math-graph-toc-group li {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 8px;
+  align-items: baseline;
+  padding: 4px 0;
+}
+
+.math-graph-toc-group li.is-current .math-link {
+  font-weight: 750;
+}
+
+.math-graph-toc-group button {
+  border: 0;
+  background: transparent;
+  color: #666;
+  font: inherit;
+  font-size: 0.75rem;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.math-graph-toc a,
+.math-graph-toc a:visited {
+  color: #111;
+}
+
+@media (max-width: 720px) {
+  .math-graph-page {
+    height: auto;
+  }
+
+  .math-graph-layout {
+    grid-template-columns: 1fr;
+    height: auto;
+  }
+
+  .math-graph-side {
+    order: 2;
+    max-height: 280px;
+  }
+
+  .math-graph-stage {
+    order: 1;
+    height: 72vh;
+    min-height: 440px;
+  }
+}

@@ -43,6 +43,8 @@ export const PATHS = {
   analytics: '/analytics',
   accounts: '/accounts',
   graph: '/graph',
+  catalog: '/catalog',
+  learned: '/learned',
   /** Карточка положения открывается как `/p/:id`. */
   statement: '/p',
 } as const
@@ -60,6 +62,22 @@ export const PAGE_META: PageMeta[] = [
     documentTitle: 'Коллоквиум',
     navLabel: 'Главная',
     navTestId: 'nav-main',
+    navGroup: 'primary',
+  },
+  {
+    id: 'catalog',
+    path: PATHS.catalog,
+    documentTitle: 'Каталог — Коллоквиум',
+    navLabel: 'Каталог',
+    navTestId: 'nav-catalog',
+    navGroup: 'primary',
+  },
+  {
+    id: 'learned',
+    path: PATHS.learned,
+    documentTitle: 'Выученные — Коллоквиум',
+    navLabel: 'Выученные',
+    navTestId: 'nav-learned',
     navGroup: 'primary',
   },
   {

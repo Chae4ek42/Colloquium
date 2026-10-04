@@ -29,7 +29,6 @@ import {
 } from '../lib/accounts-api'
 import { clearClientSession, loadClientSession } from '../lib/session'
 import {
-  bootstrapSession,
   createDefaultAppState,
   parseStoredState,
   pickRicherStateJson,
@@ -109,28 +108,13 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
   )
 
   useEffect(() => {
-    let cancelled = false
-    bootstrapSession().then((session) => {
-      if (cancelled) return
-      if (session.status === 'ready') {
-        setAccounts(session.accounts)
-        setActiveAccountId(session.accountId)
-        setAppState(session.state)
-        setNeedsAccount(false)
-        setBootstrapError(null)
-      } else {
-        // неактуально: экран входа. Прогресс коллоквиума хранится отдельно в localStorage.
-        setAccounts(session.accounts)
-        setActiveAccountId(null)
-        setAppState(createDefaultAppState())
-        setNeedsAccount(false)
-        setBootstrapError(null)
-      }
-      setStorageReady(true)
-    })
-    return () => {
-      cancelled = true
-    }
+    // неактуально: экран входа и /api/accounts. Прогресс коллоквиума лежит в своём localStorage.
+    setAccounts([])
+    setActiveAccountId(null)
+    setAppState(createDefaultAppState())
+    setNeedsAccount(false)
+    setBootstrapError(null)
+    setStorageReady(true)
   }, [])
 
   useEffect(() => {

@@ -25,6 +25,8 @@ export type AppPage =
   | 'accounts'
   | 'graph'
   | 'statement'
+  | 'catalog'
+  | 'learned'
 
 /** Sections that accumulate active-time analytics. */
 export type AnalyticsSection =

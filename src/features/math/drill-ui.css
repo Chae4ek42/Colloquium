@@ -1,0 +1,82 @@
+.drill-page {
+  gap: 20px;
+}
+
+.drill-head {
+  display: grid;
+  gap: 6px;
+}
+
+.drill-title {
+  margin: 0;
+}
+
+.drill-lead {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+
+.drill-controls-panel {
+  width: 100%;
+  max-width: 420px;
+}
+
+.drill-controls-panel .segmented {
+  width: 100%;
+}
+
+.drill-controls-panel .primary-button {
+  width: 100%;
+}
+
+.drill-controls-panel .control-hint {
+  margin: 0;
+}
+
+.drill-controls-panel .primary-button:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.drill-practice-layout {
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+.drill-prompt {
+  margin: 0;
+  max-width: 34ch;
+  font-size: clamp(1.5rem, 4vw, 2.2rem);
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+}
+
+.drill-answer-block {
+  display: grid;
+  gap: 12px;
+  width: min(640px, 100%);
+  min-height: 180px;
+}
+
+.drill-reveal {
+  padding: 12px 0 4px;
+  text-align: left;
+}
+
+.drill-hint-text {
+  margin: 0;
+  color: var(--muted);
+  text-align: center;
+  font-size: 0.95rem;
+}
+
+.drill-grade {
+  min-width: 120px;
+  border: 1px solid var(--border);
+}
+
+.drill-grade.primary-button {
+  border-color: #111;
+}
