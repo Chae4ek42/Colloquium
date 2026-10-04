@@ -4,10 +4,10 @@ import { useProgress } from './progress'
 import { StatementCard } from './StatementCard'
 import { STREAM_FILTERS, visibleItems, type StreamFilter } from './streams'
 import { LearnedButton, streamText } from './ui'
-import { streamKey } from './local-accounts'
-import { useLocalAccount } from './LocalAccounts'
 import '../home/styles.css'
 import './styles.css'
+
+const STREAM_KEY = 'colloquium-stream-v1'
 
 function readStream(key: string): StreamFilter {
   try {
@@ -20,14 +20,12 @@ function readStream(key: string): StreamFilter {
 }
 
 export function ColloquiumHome() {
-  const { accountId } = useLocalAccount()
   const progress = useProgress()
-  const key = streamKey(accountId ?? '')
-  const [stream, setStream] = useState<StreamFilter>(() => readStream(key))
+  const [stream, setStream] = useState<StreamFilter>(() => readStream(STREAM_KEY))
 
   function choose(next: StreamFilter) {
     setStream(next)
-    localStorage.setItem(key, next)
+    localStorage.setItem(STREAM_KEY, next)
   }
 
   const questions = QUESTIONS.map((question) => ({

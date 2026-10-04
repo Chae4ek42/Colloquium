@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from 'react'
 import { EMPTY_PROGRESS, recordAnswer, toggleLearned, type ProgressState } from './progress-model'
-import { progressKey } from './local-accounts'
+
+const STORAGE_KEY = 'colloquium-progress-v1'
 
 function readProgress(storageKey: string): ProgressState {
   try {
@@ -26,11 +27,23 @@ interface ProgressApi {
 
 const ProgressContext = createContext<ProgressApi | null>(null)
 
-export function ProgressProvider({ accountId, children }: { accountId: string; children: ReactNode }) {
-  const storageKey = progressKey(accountId)
+function readStoredProgress(): ProgressState {
+  const direct = readProgress(STORAGE_KEY)
+  if (direct.learned.length || Object.keys(direct.stats).length) return direct
+  for (let index = 0; index < localStorage.length; index += 1) {
+    const key = localStorage.key(index)
+    if (!key?.startsWith(`${STORAGE_KEY}:`)) continue
+    const scoped = readProgress(key)
+    if (scoped.learned.length || Object.keys(scoped.stats).length) return scoped
+  }
+  return direct
+}
+
+export function ProgressProvider({ children }: { children: ReactNode }) {
+  const storageKey = STORAGE_KEY
   const [snapshot, setSnapshot] = useState(() => ({
     key: storageKey,
-    state: readProgress(storageKey),
+    state: readStoredProgress(),
   }))
   if (snapshot.key !== storageKey) {
     setSnapshot({ key: storageKey, state: readProgress(storageKey) })

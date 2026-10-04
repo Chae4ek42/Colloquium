@@ -18,7 +18,7 @@ import { GraphPage } from '../features/math/GraphPage'
 import { StatementPage } from '../features/math/StatementPage'
 import { MathUiProvider } from '../features/math/ui'
 import { ProgressProvider } from '../features/math/progress'
-import { LocalAccountGate, LocalAccountProvider, useLocalAccount } from '../features/math/LocalAccounts'
+// неактуально: вход по аккаунту спрятан, прогресс лежит в общем localStorage.
 import { useAppRouter } from '../shared/lib/useAppRouter'
 import { useActiveTimeTracker } from '../shared/lib/useActiveTimeTracker'
 import type { AppPage } from '../shared/lib/types'
@@ -102,7 +102,6 @@ function AppRoutes() {
   const { page, statementId, navigate, goPage } = useAppRouter()
   const { exportBackup, openImportPicker, fileInputRef, onImportFileChange, canExport } = useBackupApp()
   const { applyActiveDeltas } = useAnalyticsState()
-  const { accountId, accountName, logout } = useLocalAccount()
 
   useActiveTimeTracker({
     page,
@@ -118,23 +117,13 @@ function AppRoutes() {
     )
   }
 
-  if (!accountId) {
-    return (
-      <div className="app-shell">
-        <LocalAccountGate />
-      </div>
-    )
-  }
-
   return (
-    <ProgressProvider accountId={accountId}>
+    <ProgressProvider>
       <MathUiProvider onOpenStatement={(id) => navigate(`/p/${encodeURIComponent(id)}`)}>
         <div className="app-shell">
           <AppHeader
             currentPage={page}
             onNavigate={goPage}
-            accountName={accountName ?? undefined}
-            onSignOut={logout}
             onExportBackup={canExport ? exportBackup : undefined}
             onImportBackup={openImportPicker}
             importInputRef={fileInputRef}
@@ -150,9 +139,7 @@ function AppRoutes() {
 function App() {
   return (
     <AppStateProvider>
-      <LocalAccountProvider>
-        <AppRoutes />
-      </LocalAccountProvider>
+      <AppRoutes />
     </AppStateProvider>
   )
 }
