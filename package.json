@@ -1,0 +1,47 @@
+{
+  "name": "jp",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host",
+    "dev:api": "npx wrangler dev --local --port 8787 --ip 127.0.0.1",
+    "dev:full": "npx concurrently -k -n api,web -c cyan,magenta \"npm run dev:api\" \"npm run dev\"",
+    "typecheck": "tsc --noEmit && tsc --noEmit -p tsconfig.test.json",
+    "build": "tsc --noEmit && vite build",
+    "lint": "oxlint",
+    "preview": "vite preview --host",
+    "test:unit": "node --import tsx --test --test-concurrency=1 \"tests/unit/**/*.test.ts\"",
+    "test:e2e": "playwright test",
+    "test": "npm run test:unit && npm run test:e2e",
+    "d1:migrate:local": "npx wrangler d1 migrations apply japanese --local",
+    "d1:migrate:remote": "npx wrangler d1 migrations apply japanese --remote",
+    "build:kanji-bank": "node scripts/build-kanji-bank.mjs",
+    "build:reading-foundation": "node scripts/add-reading-foundation.mjs",
+    "apply:kana-preferred": "node scripts/apply-kana-preferred-surfaces.mjs",
+    "build:kana-catalog": "node scripts/add-kana-catalog.mjs",
+    "scrape:kanji-components": "node scripts/scrape-kanji-components.mjs",
+    "russify:kanji": "node scripts/russify-kanji-texts.mjs"
+  },
+  "dependencies": {
+    "@patdx/kuromoji": "^1.0.4",
+    "katex": "^0.19.0",
+    "react": "^19.2.7",
+    "react-dom": "^19.2.7",
+    "recharts": "^3.10.1"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.61.1",
+    "@types/katex": "^0.16.8",
+    "@types/node": "^26.1.1",
+    "@types/react": "^19.2.17",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^6.0.3",
+    "concurrently": "^9.2.4",
+    "oxlint": "^1.71.0",
+    "tsx": "^4.23.1",
+    "typescript": "^5.8.3",
+    "vite": "^8.1.1",
+    "wrangler": "^4.121.0"
+  }
+}

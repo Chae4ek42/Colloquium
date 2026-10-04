@@ -1,0 +1,169 @@
+.math-home {
+  display: grid;
+  gap: 18px;
+}
+
+.math-program,
+.math-note,
+.math-stream {
+  margin: 0;
+  color: var(--muted-strong);
+}
+
+.math-questions {
+  display: grid;
+  gap: 10px;
+}
+
+.math-question {
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: #fff;
+  padding: 12px 14px;
+}
+
+.math-question summary {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 10px;
+  align-items: baseline;
+  cursor: pointer;
+  list-style: none;
+}
+
+.math-question summary::-webkit-details-marker {
+  display: none;
+}
+
+.math-question-num {
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.math-question-count,
+.math-kicker {
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+
+.math-question-body,
+.math-sheet,
+.math-card {
+  display: grid;
+  gap: 12px;
+}
+
+.math-question-body {
+  padding-top: 12px;
+}
+
+.math-items,
+.math-rel,
+.math-edges {
+  display: grid;
+  gap: 14px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.math-item-head,
+.math-sheet-head,
+.math-quick-head,
+.math-quick-actions,
+.math-grade,
+.math-setup {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 12px;
+  align-items: center;
+}
+
+.math-setup {
+  align-items: end;
+}
+
+.math-setup label,
+.math-search {
+  display: grid;
+  gap: 4px;
+  color: var(--muted-strong);
+}
+
+.math-setup select,
+.math-search input,
+.math-start,
+.math-grade button,
+.math-learned {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: #fff;
+  color: inherit;
+  padding: 8px 10px;
+}
+
+.math-learned.is-on {
+  background: var(--accent-soft);
+  border-color: transparent;
+}
+
+.math-link {
+  color: inherit;
+  font-weight: 650;
+  text-underline-offset: 3px;
+}
+
+.math-prose,
+.math-source {
+  margin: 0;
+  line-height: 1.55;
+}
+
+.math-source {
+  white-space: pre-wrap;
+}
+
+.math-sheet {
+  padding-bottom: 40px;
+}
+
+.math-page {
+  width: min(100%, 820px);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+}
+
+.math-quick-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 30;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  background: rgba(17, 17, 17, 0.28);
+}
+
+.math-quick {
+  width: min(720px, 100%);
+  max-height: min(80vh, 760px);
+  overflow: auto;
+  display: grid;
+  gap: 12px;
+  padding: 18px;
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: 0 16px 50px rgba(0, 0, 0, 0.16);
+}
+
+.math-inline-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 10px;
+  margin: 0;
+}
+
+.math-edges li {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}

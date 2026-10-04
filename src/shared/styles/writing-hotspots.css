@@ -1,0 +1,42 @@
+.kanji-chip {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  padding: 0 2px;
+  font: inherit;
+  font-family: 'Noto Sans JP', sans-serif;
+  color: inherit;
+  cursor: pointer;
+  border-radius: 8px;
+  line-height: 1.1;
+  transition: background 0.15s ease, color 0.15s ease;
+  -webkit-touch-callout: none;
+  touch-action: manipulation;
+  user-select: none;
+}
+
+.kanji-chip:hover,
+.kanji-chip:focus-visible {
+  background: rgba(17, 17, 17, 0.06);
+  outline: none;
+}
+
+.kanji-chip.is-focus {
+  color: #3d5f8a;
+}
+
+/* Soft palette — used only with colorize in training */
+.kanji-chip.is-c0 { color: #4a6280; }
+.kanji-chip.is-c1 { color: #4a7a66; }
+.kanji-chip.is-c2 { color: #8a6a45; }
+.kanji-chip.is-c3 { color: #7a5560; }
+.kanji-chip.is-c4 { color: #4a7380; }
+.kanji-chip.is-c5 { color: #7a6a48; }
+
+.kanji-chip.is-shared-reading {
+  border-bottom: 1px dotted currentColor;
+}
+
+.kanji-chip-kana {
+  color: var(--muted-strong);
+}

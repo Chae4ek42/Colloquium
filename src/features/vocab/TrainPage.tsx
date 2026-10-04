@@ -1,0 +1,67 @@
+import { useState } from 'react'
+import './styles.css'
+import { DEFAULT_VOCAB_PREFERENCES } from '../../shared/state/app-state'
+import { useVocabState } from '../../shared/state/AppStateContext'
+import { CheatSheetsBar } from '../../shared/ui/CheatSheetsBar'
+import { KanjiInfoCard } from '../kanji/KanjiInfoCard'
+import { VocabTrainer } from './VocabTrainer'
+
+export function TrainPage() {
+  const vocab = useVocabState()
+  const [infoKanji, setInfoKanji] = useState<string | null>(null)
+
+  if (!vocab) return null
+
+  return (
+    <main className="vocab-page train-page" data-testid="train-page">
+      <header className="section-heading vocab-page-head">
+        <div>
+          <h2>Тренажёр слов</h2>
+        </div>
+        <CheatSheetsBar testIdPrefix="train" />
+      </header>
+
+      <VocabTrainer
+        preferences={vocab.preferences ?? DEFAULT_VOCAB_PREFERENCES}
+        stats={vocab.stats}
+        memory={vocab.memory}
+        latencyModel={vocab.latencyModel}
+        reviewDay={vocab.reviewDay}
+        myWords={vocab.myWords}
+        myWordAddedAt={vocab.myWordAddedAt}
+        customWords={vocab.customWords}
+        hiddenWordIds={vocab.hiddenWordIds}
+        learnedWordIds={vocab.learnedWordIds}
+        trainingWordIds={vocab.trainingWordIds}
+        listTrainingWordIds={vocab.listTrainingWordIds}
+        trainingSets={vocab.trainingSets}
+        problemWordIds={vocab.problemWordIds}
+        liveSession={vocab.liveSession}
+        onSaveLiveSession={vocab.saveLiveSession}
+        onPatchPreferences={vocab.patchPreferences}
+        onUpdateStats={vocab.updateStats}
+        onApplyGradedReview={vocab.applyGradedReview}
+        onAddMyWords={vocab.addMyWords}
+        onAddTrainingWords={vocab.addTrainingWords}
+        onRemoveTrainingWords={vocab.removeTrainingWords}
+        onSaveWordEdit={vocab.saveWordEdit}
+        onHideWords={vocab.hideWords}
+        onToggleLearnedWords={vocab.toggleLearnedWords}
+        onAddProblemWords={vocab.addProblemWords}
+        onRemoveProblemWords={vocab.removeProblemWords}
+        onOpenKanjiInfo={setInfoKanji}
+      />
+
+      {infoKanji ? (
+        <KanjiInfoCard
+          character={infoKanji}
+          myWords={vocab.myWords}
+          trainingWordIds={vocab.trainingWordIds}
+          onClose={() => setInfoKanji(null)}
+          onToggleMyWord={vocab.toggleMyWord}
+          onToggleTrainingWord={(id) => vocab.toggleTrainingWord(id)}
+        />
+      ) : null}
+    </main>
+  )
+}
