@@ -79,8 +79,44 @@
     grid-template-columns: 1fr;
   }
 
+  .drill-controls-panel {
+    max-width: none;
+  }
+
   .drill-questions ul {
     max-height: none;
+  }
+}
+
+@media (max-width: 720px) {
+  .drill-questions li {
+    grid-template-columns: auto minmax(0, 1fr);
+    grid-template-areas:
+      'num title'
+      'num action';
+  }
+
+  .drill-q-num {
+    grid-area: num;
+  }
+
+  .drill-q-title {
+    grid-area: title;
+  }
+
+  .drill-questions li button {
+    grid-area: action;
+    justify-self: start;
+    min-height: 36px;
+  }
+
+  .drill-prompt {
+    max-width: none;
+    font-size: 1.35rem;
+  }
+
+  .drill-answer-block {
+    min-height: 0;
   }
 }
 

@@ -637,12 +637,76 @@ p.math-bento-toggle {
 }
 
 @media (max-width: 720px) {
+  .math-home,
+  .math-sheet,
+  .math-catalog,
+  .math-statement,
+  .drill-page {
+    width: 100%;
+  }
+
+  .math-question {
+    padding: 4px 10px 6px;
+  }
+
   .math-question summary {
     grid-template-columns: auto minmax(0, 1fr) auto;
+    grid-template-areas:
+      'num title check'
+      'num count check';
+    gap: 2px 10px;
+    align-items: center;
+  }
+
+  .math-question-num {
+    grid-area: num;
+    align-self: start;
+    padding-top: 2px;
+  }
+
+  .math-question-title {
+    grid-area: title;
   }
 
   .math-question-count {
-    grid-column: 2;
+    grid-area: count;
+    grid-column: auto;
+  }
+
+  .math-question summary .math-check {
+    grid-area: check;
+  }
+
+  .math-bento {
+    padding: 12px;
+  }
+
+  .math-bento.is-folded {
+    padding: 8px 10px;
+  }
+
+  .math-bento-toggle {
+    font-size: 1.02rem;
+  }
+
+  .math-bento-block {
+    padding: 10px 12px;
+  }
+
+  .math-stream-option,
+  .math-photo {
+    min-height: 36px;
+  }
+
+  .math-photo-dialog {
+    width: 100%;
+    max-height: min(92vh, 980px);
+    border-radius: 12px;
+  }
+
+  .math-prose .katex-display,
+  .math-bento-block .katex-display {
+    max-width: 100%;
   }
 }
 
