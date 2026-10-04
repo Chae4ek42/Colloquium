@@ -4,14 +4,14 @@ import { useProgress } from './progress'
 import { StatementCard } from './StatementCard'
 import { STREAM_FILTERS, visibleItems, type StreamFilter } from './streams'
 import { LearnedButton, streamText } from './ui'
+import { streamKey } from './local-accounts'
+import { useLocalAccount } from './LocalAccounts'
 import '../home/styles.css'
 import './styles.css'
 
-const STREAM_KEY = 'colloquium-stream-v1'
-
-function readStream(): StreamFilter {
+function readStream(key: string): StreamFilter {
   try {
-    const saved = localStorage.getItem(STREAM_KEY)
+    const saved = localStorage.getItem(key)
     if (STREAM_FILTERS.some((item) => item.id === saved)) return saved as StreamFilter
   } catch {
     /* выбор потока остаётся «все вопросы» */
@@ -20,12 +20,14 @@ function readStream(): StreamFilter {
 }
 
 export function ColloquiumHome() {
+  const { accountId } = useLocalAccount()
   const progress = useProgress()
-  const [stream, setStream] = useState<StreamFilter>(readStream)
+  const key = streamKey(accountId ?? '')
+  const [stream, setStream] = useState<StreamFilter>(() => readStream(key))
 
   function choose(next: StreamFilter) {
     setStream(next)
-    localStorage.setItem(STREAM_KEY, next)
+    localStorage.setItem(key, next)
   }
 
   const questions = QUESTIONS.map((question) => ({

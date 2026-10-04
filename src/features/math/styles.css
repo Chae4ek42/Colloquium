@@ -747,3 +747,57 @@ p.math-bento-toggle {
   flex-wrap: wrap;
   gap: 6px;
 }
+
+.site-account-name {
+  color: #444;
+  font-size: 0.84rem;
+}
+
+.math-auth {
+  width: min(420px, 100%);
+  margin: 8vh auto 0;
+  display: grid;
+  gap: 12px;
+}
+
+.math-auth h1 {
+  margin: 0;
+}
+
+.math-auth p {
+  margin: 0;
+  color: #444;
+}
+
+.math-auth form {
+  display: grid;
+  gap: 12px;
+}
+
+.math-auth label {
+  display: grid;
+  gap: 6px;
+  font-size: 0.84rem;
+}
+
+.math-auth input,
+.math-auth select {
+  width: 100%;
+  min-height: 44px;
+  padding: 8px 12px;
+  border: 1px solid rgba(17, 17, 17, 0.16);
+  border-radius: 12px;
+  background: #fff;
+  font: inherit;
+}
+
+.math-auth .primary-button {
+  min-height: 44px;
+  border-radius: 999px;
+  background: #111;
+  color: #fff;
+}
+
+.math-auth-error {
+  color: #b42318;
+}

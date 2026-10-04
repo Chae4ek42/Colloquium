@@ -1,11 +1,10 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from 'react'
 import { EMPTY_PROGRESS, recordAnswer, toggleLearned, type ProgressState } from './progress-model'
+import { progressKey } from './local-accounts'
 
-const STORAGE_KEY = 'colloquium-progress-v1'
-
-function readProgress(): ProgressState {
+function readProgress(storageKey: string): ProgressState {
   try {
-    const raw = localStorage.getItem(STORAGE_KEY)
+    const raw = localStorage.getItem(storageKey)
     if (!raw) return EMPTY_PROGRESS
     const parsed = JSON.parse(raw) as Partial<ProgressState>
     return {
@@ -27,27 +26,32 @@ interface ProgressApi {
 
 const ProgressContext = createContext<ProgressApi | null>(null)
 
-export function ProgressProvider({ children }: { children: ReactNode }) {
-  const [state, setState] = useState<ProgressState>(EMPTY_PROGRESS)
-  const [ready, setReady] = useState(false)
+export function ProgressProvider({ accountId, children }: { accountId: string; children: ReactNode }) {
+  const storageKey = progressKey(accountId)
+  const [snapshot, setSnapshot] = useState(() => ({
+    key: storageKey,
+    state: readProgress(storageKey),
+  }))
+  if (snapshot.key !== storageKey) {
+    setSnapshot({ key: storageKey, state: readProgress(storageKey) })
+  }
+  const state = snapshot.state
 
   useEffect(() => {
-    setState(readProgress())
-    setReady(true)
-  }, [])
+    localStorage.setItem(snapshot.key, JSON.stringify(snapshot.state))
+  }, [snapshot])
 
-  useEffect(() => {
-    if (!ready) return
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(state))
-  }, [ready, state])
+  function update(recipe: (prev: ProgressState) => ProgressState) {
+    setSnapshot((current) => ({ key: current.key, state: recipe(current.state) }))
+  }
 
   const learned = new Set(state.learned)
   const api: ProgressApi = {
     state,
     learned,
     isLearned: (id) => learned.has(id),
-    toggle: (id) => setState((prev) => toggleLearned(prev, id)),
-    answer: (id, known) => setState((prev) => recordAnswer(prev, id, known)),
+    toggle: (id) => update((prev) => toggleLearned(prev, id)),
+    answer: (id, known) => update((prev) => recordAnswer(prev, id, known)),
   }
 
   return <ProgressContext.Provider value={api}>{children}</ProgressContext.Provider>

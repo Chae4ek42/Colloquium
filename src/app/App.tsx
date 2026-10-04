@@ -11,7 +11,6 @@ import { MineWordsPage } from '../features/vocab/MineWordsPage'
 import { TrainPage } from '../features/vocab/TrainPage'
 import { TheoryPage } from '../features/theory/TheoryPage'
 import { AnalyticsPage } from '../features/analytics/AnalyticsPage'
-import { AccountGate } from '../features/accounts/AccountGate'
 import { CatalogPage } from '../features/math/CatalogPage'
 import { ColloquiumHome } from '../features/math/HomePage'
 import { DrillPage } from '../features/math/DrillPage'
@@ -19,6 +18,7 @@ import { GraphPage } from '../features/math/GraphPage'
 import { StatementPage } from '../features/math/StatementPage'
 import { MathUiProvider } from '../features/math/ui'
 import { ProgressProvider } from '../features/math/progress'
+import { LocalAccountGate, LocalAccountProvider, useLocalAccount } from '../features/math/LocalAccounts'
 import { useAppRouter } from '../shared/lib/useAppRouter'
 import { useActiveTimeTracker } from '../shared/lib/useActiveTimeTracker'
 import type { AppPage } from '../shared/lib/types'
@@ -102,6 +102,7 @@ function AppRoutes() {
   const { page, statementId, navigate, goPage } = useAppRouter()
   const { exportBackup, openImportPicker, fileInputRef, onImportFileChange, canExport } = useBackupApp()
   const { applyActiveDeltas } = useAnalyticsState()
+  const { accountId, accountName, logout } = useLocalAccount()
 
   useActiveTimeTracker({
     page,
@@ -117,21 +118,23 @@ function AppRoutes() {
     )
   }
 
-  if (page === 'accounts') {
+  if (!accountId) {
     return (
       <div className="app-shell">
-        <AccountGate onEntered={() => goPage('home')} onCancel={() => goPage('home')} />
+        <LocalAccountGate />
       </div>
     )
   }
 
   return (
-    <ProgressProvider>
+    <ProgressProvider accountId={accountId}>
       <MathUiProvider onOpenStatement={(id) => navigate(`/p/${encodeURIComponent(id)}`)}>
         <div className="app-shell">
           <AppHeader
             currentPage={page}
             onNavigate={goPage}
+            accountName={accountName ?? undefined}
+            onSignOut={logout}
             onExportBackup={canExport ? exportBackup : undefined}
             onImportBackup={openImportPicker}
             importInputRef={fileInputRef}
@@ -147,7 +150,9 @@ function AppRoutes() {
 function App() {
   return (
     <AppStateProvider>
-      <AppRoutes />
+      <LocalAccountProvider>
+        <AppRoutes />
+      </LocalAccountProvider>
     </AppStateProvider>
   )
 }

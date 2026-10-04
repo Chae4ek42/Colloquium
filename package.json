@@ -11,6 +11,7 @@
     "build": "tsc --noEmit && vite build",
     "lint": "oxlint",
     "preview": "vite preview --host",
+    "deploy": "npm run build && wrangler deploy",
     "test:unit": "node --import tsx --test --test-concurrency=1 \"tests/unit/**/*.test.ts\"",
     "test:e2e": "playwright test",
     "test": "npm run test:unit && npm run test:e2e",

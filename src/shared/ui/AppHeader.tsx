@@ -6,6 +6,8 @@ import type { RefObject, ChangeEvent } from 'react'
 export interface AppHeaderProps {
   currentPage: AppPage
   onNavigate: (page: AppPage) => void
+  accountName?: string
+  onSignOut?: () => void
   onExportBackup?: () => void
   onImportBackup?: () => void
   importInputRef?: RefObject<HTMLInputElement | null>
@@ -17,6 +19,8 @@ const NAV_ITEMS = navItems('primary')
 export function AppHeader({
   currentPage,
   onNavigate,
+  accountName,
+  onSignOut,
   onExportBackup,
   onImportBackup,
   importInputRef,
@@ -42,7 +46,12 @@ export function AppHeader({
         </div>
 
         <div className="site-header-actions">
-          {/* неактуально: меню аккаунтов и учебных наборов japanese. */}
+          {accountName ? <span className="site-account-name">{accountName}</span> : null}
+          {onSignOut ? (
+            <button type="button" className="text-button" data-testid="sign-out" onClick={onSignOut}>
+              Выйти
+            </button>
+          ) : null}
           {onExportBackup ? (
             <button type="button" className="text-button" data-testid="export-backup" onClick={onExportBackup}>
               Экспорт
