@@ -3,36 +3,23 @@ import { QUESTIONS, getStatement, questionId } from '../../data/math/bank'
 import { usePracticeSession } from '../../shared/lib/usePracticeSession'
 import { PracticeShell } from '../../shared/ui/PracticeShell'
 import { ShortcutNote } from '../../shared/ui/ShortcutNote'
-import { pickWeighted, type DrillMode } from './drill'
-import { displayName } from './present'
+import { pickWeighted } from './drill'
 import { useProgress } from './progress'
 import { StatementBody, StatementLink } from './ui'
 import './styles.css'
 import './drill-ui.css'
 
-type PoolKind = 'question' | 'statement'
 type Scope = 'all' | 'learned'
-
-const KIND_OPTIONS: { id: PoolKind; label: string }[] = [
-  { id: 'question', label: 'Вопрос коллоквиума' },
-  { id: 'statement', label: 'Положение' },
-]
 
 const SCOPE_OPTIONS: { id: Scope; label: string }[] = [
   { id: 'all', label: 'Все' },
   { id: 'learned', label: 'Только выученные' },
 ]
 
-const MODE_OPTIONS: { id: DrillMode; label: string }[] = [
-  { id: 'adaptive', label: 'Адаптивный' },
-  { id: 'even', label: 'Равномерный' },
-]
-
 const ADVANCE_DELAY_MS = 220
 
 interface LatestDrill {
   ids: string[]
-  mode: DrillMode
   current: string | null
   revealed: boolean
   view: string
@@ -42,33 +29,16 @@ interface LatestDrill {
   step: (direction: -1 | 1) => void
 }
 
-function buildPool(kind: PoolKind, scope: Scope, learned: Set<string>, included: number[]): string[] {
-  const chosen = QUESTIONS.filter((question) => included.includes(question.number))
-  const ids =
-    kind === 'question'
-      ? chosen.map((question) => questionId(question.number))
-      : [
-          ...new Set(
-            chosen.flatMap((question) =>
-              question.items
-                .map((item) => item.statementId)
-                .filter((id) => {
-                  const statement = getStatement(id)
-                  return Boolean(statement && statement.kind !== 'prose' && statement.kind !== 'exercise')
-                }),
-            ),
-          ),
-        ]
+function buildPool(scope: Scope, learned: Set<string>, included: number[]): string[] {
+  const ids = QUESTIONS.filter((question) => included.includes(question.number)).map((question) =>
+    questionId(question.number),
+  )
   return scope === 'all' ? ids : ids.filter((id) => learned.has(id))
 }
 
-function emptyPoolReason(kind: PoolKind, scope: Scope, includedCount: number): string {
+function emptyPoolReason(scope: Scope, includedCount: number): string {
   if (includedCount === 0) return 'Добавьте хотя бы один вопрос справа.'
-  if (scope === 'learned') {
-    return kind === 'question'
-      ? 'Среди выбранных вопросов выученных нет. Отметьте их на главной или выберите «Все».'
-      : 'Среди положений выбранных вопросов выученных нет. Отметьте их в каталоге или выберите «Все».'
-  }
+  if (scope === 'learned') return 'Среди выбранных вопросов выученных нет. Отметьте их на главной или выберите «Все».'
   return 'Здесь пока нечего спрашивать.'
 }
 
@@ -88,9 +58,7 @@ export function DrillPage() {
     recordAnswered,
   } = usePracticeSession()
 
-  const [kind, setKind] = useState<PoolKind>('question')
   const [scope, setScope] = useState<Scope>('all')
-  const [mode, setMode] = useState<DrillMode>('adaptive')
   const [included, setIncluded] = useState<number[]>(() => QUESTIONS.map((question) => question.number))
   const [current, setCurrent] = useState<string | null>(null)
   const [revealed, setRevealed] = useState(false)
@@ -98,14 +66,13 @@ export function DrillPage() {
   const trailAt = useRef(-1)
 
   const ids = useMemo(
-    () => buildPool(kind, scope, progress.learned, included),
-    [kind, scope, progress.learned, included],
+    () => buildPool(scope, progress.learned, included),
+    [scope, progress.learned, included],
   )
   const canStart = ids.length > 0
 
   const latest = useRef<LatestDrill>({
     ids,
-    mode,
     current,
     revealed,
     view,
@@ -131,7 +98,7 @@ export function DrillPage() {
   function showNext() {
     const live = latest.current
     const candidates = live.ids.length > 1 ? live.ids.filter((id) => id !== live.current) : live.ids
-    const nextId = pickWeighted(candidates, live.stats, live.mode, Math.random())
+    const nextId = pickWeighted(candidates, live.stats, 'even', Math.random())
     if (!nextId) {
       stopPractice()
       return
@@ -163,8 +130,8 @@ export function DrillPage() {
     if (!canStart) return
     trail.current = []
     trailAt.current = -1
-    latest.current = { ...latest.current, ids, mode, current: null }
-    beginPractice({ poolIds: ids, mode })
+    latest.current = { ...latest.current, ids, current: null }
+    beginPractice({ poolIds: ids, mode: 'even' })
     showNext()
   }
 
@@ -186,13 +153,12 @@ export function DrillPage() {
     if (view !== 'practice' || !current || !revealed || pendingAdvanceRef.current) return
     progress.answer(current, known)
     recordAnswered(known ? 1 : 0)
-    setFeedback(known ? { type: 'success', text: 'Знаю' } : { type: 'hint', text: 'Не знаю — вернёмся к этому' })
+    setFeedback(known ? { type: 'success', text: 'Знаю' } : { type: 'hint', text: 'Не знаю' })
     queueAdvance(showNext, ADVANCE_DELAY_MS)
   }
 
   latest.current = {
     ids,
-    mode,
     current,
     revealed,
     view,
@@ -239,33 +205,15 @@ export function DrillPage() {
   }
 
   if (view === 'setup') {
-    const countLabel = kind === 'question' ? 'вопросов' : 'положений'
     return (
       <main className="math-sheet drill-page">
         <header className="drill-head">
           <h1 className="drill-title">Тренировка</h1>
-          <p className="drill-lead">Вспоминайте формулировки по карточкам, а программа подскажет, что повторить.</p>
+          <p className="drill-lead">Вспоминайте формулировки вопросов по карточкам.</p>
         </header>
 
         <div className="drill-setup-layout">
           <section className="setup-surface controls-panel drill-controls-panel" data-testid="drill-setup">
-            <div className="control-group">
-              <span className="group-label">Что спрашивать</span>
-              <div className="segmented">
-                {KIND_OPTIONS.map((option) => (
-                  <button
-                    key={option.id}
-                    type="button"
-                    data-testid={`drill-kind-${option.id}`}
-                    className={kind === option.id ? 'segmented-button is-active' : 'segmented-button'}
-                    onClick={() => setKind(option.id)}
-                  >
-                    {option.label}
-                  </button>
-                ))}
-              </div>
-            </div>
-
             <div className="control-group">
               <span className="group-label">Пул</span>
               <div className="segmented">
@@ -282,25 +230,8 @@ export function DrillPage() {
                 ))}
               </div>
               <p className="control-hint" data-testid="drill-pool-count">
-                {canStart ? `${ids.length} ${countLabel} в тренировке` : emptyPoolReason(kind, scope, included.length)}
+                {canStart ? `${ids.length} вопросов в тренировке` : emptyPoolReason(scope, included.length)}
               </p>
-            </div>
-
-            <div className="control-group">
-              <span className="group-label">Подбор</span>
-              <div className="segmented">
-                {MODE_OPTIONS.map((option) => (
-                  <button
-                    key={option.id}
-                    type="button"
-                    data-testid={`drill-mode-${option.id}`}
-                    className={mode === option.id ? 'segmented-button is-active' : 'segmented-button'}
-                    onClick={() => setMode(option.id)}
-                  >
-                    {option.label}
-                  </button>
-                ))}
-              </div>
             </div>
 
             <div className="primary-actions">
@@ -343,12 +274,8 @@ export function DrillPage() {
     )
   }
 
-  const question =
-    current && (kind === 'question' || current.startsWith('q'))
-      ? QUESTIONS.find((item) => questionId(item.number) === current) ?? null
-      : null
-  const statement = current && !question ? getStatement(current) : null
-  const hasCard = Boolean(question || statement)
+  const question = current ? QUESTIONS.find((item) => questionId(item.number) === current) ?? null : null
+  const hasCard = Boolean(question)
 
   return (
     <PracticeShell
@@ -367,9 +294,9 @@ export function DrillPage() {
       {hasCard ? (
         <>
           <div className="question-block">
-            <p className="question-script">{question ? `Вопрос ${question.number}` : 'Сформулируйте'}</p>
+            <p className="question-script">{question ? `Вопрос ${question.number}` : ''}</p>
             <h2 className="drill-prompt" data-testid="drill-prompt" aria-live="polite">
-              {question ? question.title : statement ? displayName(statement) : ''}
+              {question ? question.title : ''}
             </h2>
           </div>
 
@@ -388,8 +315,6 @@ export function DrillPage() {
                       )
                     })}
                   </ol>
-                ) : statement ? (
-                  <StatementBody statement={statement} />
                 ) : null}
               </div>
             ) : (
