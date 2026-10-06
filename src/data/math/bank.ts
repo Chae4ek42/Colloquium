@@ -27,7 +27,7 @@ export { listSources, activeSource }
 const COURSE_SOURCE: MathSource = {
   id: 'f1-lectures',
   title: 'Редкозубов В.В.',
-  author: 'старый',
+  author: 'Редкозубов В.В.',
   statements: statementsJson as StatementRecord[],
   depends: DEPENDS,
   formulations: FORMULATIONS,
@@ -40,7 +40,7 @@ const COURSE_SOURCE: MathSource = {
 const GUSEV_SOURCE: MathSource = {
   id: gusevManifest.id,
   title: 'Гусев Н.А.',
-  author: 'новый',
+  author: 'Гусев Н.А.',
   statements: gusevStatements as StatementRecord[],
   depends: gusevDepends as Record<string, string[]>,
   formulations: gusevFormulations as Record<string, string>,

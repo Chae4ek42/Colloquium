@@ -74,8 +74,9 @@ export function streamText(mark: StreamMark | undefined): string | null {
 }
 
 export function StatementBody({ statement }: { statement: Statement }) {
-  if (statement.latex) return <MathText source={statement.latex} />
+  if (statement.latex) return <MathText source={statement.latex} contextId={statement.id} />
   const text = statement.formulation ?? flowText(statement.text)
+  if (text.includes('$')) return <MathText source={text} contextId={statement.id} />
   return <p className="math-prose">{text}</p>
 }
 

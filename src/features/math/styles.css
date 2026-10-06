@@ -55,12 +55,6 @@
   white-space: nowrap;
 }
 
-.math-book-note,
-.math-book-option-author {
-  color: #a3a3a3;
-  font-weight: 400;
-}
-
 .math-book-chevron {
   flex: none;
   width: 12px;
@@ -109,11 +103,6 @@
 
 .math-book-option.is-active .math-book-option-title {
   color: #111;
-}
-
-.math-book-option-author {
-  font-size: 0.75rem;
-  line-height: 1.3;
 }
 
 .math-stream-filter {

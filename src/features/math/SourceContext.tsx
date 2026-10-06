@@ -79,9 +79,7 @@ export function SourceSelect() {
         aria-controls={listId}
         onClick={() => setOpen((value) => !value)}
       >
-        <span className="math-book-title">
-          {current.title} <span className="math-book-note">{current.author}</span>
-        </span>
+        <span className="math-book-title">{current.title}</span>
         <Chevron open={open} />
       </button>
       {open ? (
@@ -99,7 +97,6 @@ export function SourceSelect() {
                   }}
                 >
                   <span className="math-book-option-title">{source.title}</span>
-                  <span className="math-book-option-author">{source.author}</span>
                 </button>
               </li>
             )

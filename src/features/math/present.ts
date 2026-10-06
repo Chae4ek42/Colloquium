@@ -17,8 +17,8 @@ export interface StatementParts {
 }
 
 export function splitParts(statement: Statement): StatementParts {
-  const latex = Boolean(statement.latex?.trim())
   const source = (statement.latex?.trim() || statement.formulation || flowText(statement.text)).trim()
+  const latex = Boolean(statement.latex?.trim()) || source.includes('$')
   const body = stripHeading(source)
   const match = body.match(/(?:^|\n+)\s*Доказательство\./)
   if (!match || match.index == null) return { formulation: body, proof: null, latex }
