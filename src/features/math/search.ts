@@ -1,4 +1,4 @@
-import { KIND_LABEL, type Statement } from '../../data/math/bank'
+import { KIND_LABEL, shortName, type Statement } from '../../data/math/bank'
 
 const YO = /ё/g
 
@@ -11,9 +11,9 @@ export function normalizeMathQuery(value: string): string {
     .trim()
 }
 
-function editDistance(left: string, right: string): number {
+function editDistance(left: string, right: string, limit: number): number {
   const gap = Math.abs(left.length - right.length)
-  if (gap > 2) return gap
+  if (gap > limit) return limit + 1
   const rows = left.length + 1
   const cols = right.length + 1
   const grid = Array.from({ length: rows }, () => new Array<number>(cols).fill(0))
@@ -38,8 +38,9 @@ function editDistance(left: string, right: string): number {
 }
 
 function typoLimit(token: string): number {
-  if (token.length >= 8) return 2
-  if (token.length >= 5) return 1
+  if (token.length >= 12) return 3
+  if (token.length >= 7) return 2
+  if (token.length >= 4) return 1
   return 0
 }
 
@@ -51,8 +52,9 @@ function wordScore(token: string, candidate: string): number {
   if (token.length >= 4 && candidate.includes(token)) return 0.84
   const limit = typoLimit(token)
   if (!limit) return 0
-  const distance = editDistance(token, candidate)
+  const distance = editDistance(token, candidate, limit)
   if (distance <= 0 || distance > limit) return 0
+  if (distance >= 3 && token.slice(0, 3) !== candidate.slice(0, 3)) return 0
   return 0.78 - distance * 0.12
 }
 
@@ -69,26 +71,41 @@ function bestWord(token: string, words: string[]): number {
 function wordsOf(value: string): string[] {
   const normalized = normalizeMathQuery(value)
   if (!normalized) return []
-  return normalized.split(/[\s-]+/).filter(Boolean)
+  return [
+    ...new Set(
+      normalized.split(/[\s-]+/).filter((word) => word.length >= 3 || /\d/.test(word)),
+    ),
+  ]
+}
+
+/** Команды KaTeX становятся отдельными словами: `\infty` ищется как infty. */
+function searchableLatex(value: string): string {
+  return value.replace(/\\[a-zA-Z]+/g, (command) => ` ${command.slice(1)} `)
 }
 
 export function scoreStatement(statement: Statement, query: string): number {
   const normalized = normalizeMathQuery(query)
   if (!normalized) return 0
   const tokens = normalized.split(' ')
-  const titleWords = wordsOf(`${statement.title} ${statement.number ?? ''} ${statement.id}`)
+  const titleWords = wordsOf(
+    `${shortName(statement.id) ?? ''} ${statement.title} ${statement.number ?? ''} ${statement.id}`,
+  )
   const kindWords = wordsOf(`${KIND_LABEL[statement.kind]} ${statement.sectionTitle}`)
-  const bodyWords = wordsOf(`${statement.formulation ?? ''} ${statement.text}`)
+  const contentWords = wordsOf(
+    `${statement.formulation ?? ''} ${statement.text} ${searchableLatex(statement.latex ?? '')}`,
+  )
   const titleBlob = titleWords.join(' ')
+  const contentBlob = contentWords.join(' ')
   let score = 0
   if (titleBlob === normalized || statement.number === normalized || statement.id === normalized) score += 100
   else if (titleBlob.includes(normalized)) score += 40
+  else if (contentBlob.includes(normalized)) score += 8
 
   for (const token of tokens) {
     const title = bestWord(token, titleWords)
     const kind = bestWord(token, kindWords)
-    const body = bestWord(token, bodyWords)
-    const best = Math.max(title * 3, kind * 1.4, body)
+    const content = bestWord(token, contentWords)
+    const best = Math.max(title * 4, kind * 1.5, content)
     if (token.length >= 3 && best <= 0) return 0
     score += best
   }

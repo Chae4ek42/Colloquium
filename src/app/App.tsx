@@ -18,6 +18,7 @@ import { GraphPage } from '../features/math/GraphPage'
 import { StatementPage } from '../features/math/StatementPage'
 import { MathUiProvider } from '../features/math/ui'
 import { ProgressProvider } from '../features/math/progress'
+import { SourceProvider, SourceSelect, useMathSource } from '../features/math/SourceContext'
 // неактуально: вход по аккаунту спрятан, прогресс лежит в общем localStorage.
 import { useAppRouter } from '../shared/lib/useAppRouter'
 import { useActiveTimeTracker } from '../shared/lib/useActiveTimeTracker'
@@ -42,19 +43,26 @@ function AppPageView({
   statementId?: string
   onNavigate: (page: AppPage) => void
 }) {
+  const { sourceId } = useMathSource()
   switch (page) {
     case 'home':
-      return <ColloquiumHome />
+      return <ColloquiumHome key={sourceId} />
     case 'catalog':
-      return <CatalogPage mode="all" />
+      return <CatalogPage key={sourceId} mode="all" />
     case 'learned':
-      return <CatalogPage mode="learned" />
+      return <CatalogPage key={`${sourceId}:learned`} mode="learned" />
     case 'train':
-      return <DrillPage />
+      return <DrillPage key={sourceId} />
     case 'graph':
-      return <GraphPage />
+      return <GraphPage key={sourceId} />
     case 'statement':
-      return <StatementPage id={statementId ?? ''} onBack={() => onNavigate('home')} />
+      return (
+        <StatementPage
+          key={`${sourceId}:${statementId ?? ''}`}
+          id={statementId ?? ''}
+          onBack={() => onNavigate('home')}
+        />
+      )
     case 'kanji':
       return <KanjiPage />
     case 'vocab':
@@ -118,21 +126,24 @@ function AppRoutes() {
   }
 
   return (
-    <ProgressProvider>
-      <MathUiProvider onOpenStatement={(id) => navigate(`/p/${encodeURIComponent(id)}`)}>
-        <div className="app-shell">
-          <AppHeader
-            currentPage={page}
-            onNavigate={goPage}
-            onExportBackup={canExport ? exportBackup : undefined}
-            onImportBackup={openImportPicker}
-            importInputRef={fileInputRef}
-            onImportFileChange={onImportFileChange}
-          />
-          <AppPageView page={page} statementId={statementId} onNavigate={goPage} />
-        </div>
-      </MathUiProvider>
-    </ProgressProvider>
+    <SourceProvider>
+      <ProgressProvider>
+        <MathUiProvider onOpenStatement={(id) => navigate(`/p/${encodeURIComponent(id)}`)}>
+          <div className="app-shell">
+            <AppHeader
+              currentPage={page}
+              onNavigate={goPage}
+              toolbar={<SourceSelect />}
+              onExportBackup={canExport ? exportBackup : undefined}
+              onImportBackup={openImportPicker}
+              importInputRef={fileInputRef}
+              onImportFileChange={onImportFileChange}
+            />
+            <AppPageView page={page} statementId={statementId} onNavigate={goPage} />
+          </div>
+        </MathUiProvider>
+      </ProgressProvider>
+    </SourceProvider>
   )
 }
 

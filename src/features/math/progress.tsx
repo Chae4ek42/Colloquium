@@ -1,21 +1,12 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from 'react'
+import { listSources } from '../../data/math/bank'
+import {
+  LEGACY_PROGRESS_KEY,
+  progressStorageKey,
+  readScopedRaw,
+} from '../../data/math/source'
 import { EMPTY_PROGRESS, recordAnswer, toggleLearned, type ProgressState } from './progress-model'
-
-const STORAGE_KEY = 'colloquium-progress-v1'
-
-function readProgress(storageKey: string): ProgressState {
-  try {
-    const raw = localStorage.getItem(storageKey)
-    if (!raw) return EMPTY_PROGRESS
-    const parsed = JSON.parse(raw) as Partial<ProgressState>
-    return {
-      learned: Array.isArray(parsed.learned) ? parsed.learned.filter((item) => typeof item === 'string') : [],
-      stats: parsed.stats && typeof parsed.stats === 'object' ? parsed.stats : {},
-    }
-  } catch {
-    return EMPTY_PROGRESS
-  }
-}
+import { useMathSource } from './SourceContext'
 
 interface ProgressApi {
   state: ProgressState
@@ -27,26 +18,39 @@ interface ProgressApi {
 
 const ProgressContext = createContext<ProgressApi | null>(null)
 
-function readStoredProgress(): ProgressState {
-  const direct = readProgress(STORAGE_KEY)
-  if (direct.learned.length || Object.keys(direct.stats).length) return direct
-  for (let index = 0; index < localStorage.length; index += 1) {
-    const key = localStorage.key(index)
-    if (!key?.startsWith(`${STORAGE_KEY}:`)) continue
-    const scoped = readProgress(key)
-    if (scoped.learned.length || Object.keys(scoped.stats).length) return scoped
+function readStoredProgress(sourceId: string): ProgressState {
+  const raw = readScopedRaw(
+    localStorage,
+    sourceId,
+    progressStorageKey(sourceId),
+    LEGACY_PROGRESS_KEY,
+    listSources()[0]?.id ?? sourceId,
+  )
+  if (!raw) return EMPTY_PROGRESS
+  try {
+    return readProgressRaw(raw)
+  } catch {
+    return EMPTY_PROGRESS
   }
-  return direct
+}
+
+function readProgressRaw(raw: string): ProgressState {
+  const parsed = JSON.parse(raw) as Partial<ProgressState>
+  return {
+    learned: Array.isArray(parsed.learned) ? parsed.learned.filter((item) => typeof item === 'string') : [],
+    stats: parsed.stats && typeof parsed.stats === 'object' ? parsed.stats : {},
+  }
 }
 
 export function ProgressProvider({ children }: { children: ReactNode }) {
-  const storageKey = STORAGE_KEY
+  const { sourceId } = useMathSource()
+  const storageKey = progressStorageKey(sourceId)
   const [snapshot, setSnapshot] = useState(() => ({
     key: storageKey,
-    state: readStoredProgress(),
+    state: readStoredProgress(sourceId),
   }))
   if (snapshot.key !== storageKey) {
-    setSnapshot({ key: storageKey, state: readProgress(storageKey) })
+    setSnapshot({ key: storageKey, state: readStoredProgress(sourceId) })
   }
   const state = snapshot.state
 

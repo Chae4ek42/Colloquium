@@ -1,4 +1,4 @@
-import { STATEMENTS, getStatement, type Statement } from '../../data/math/bank'
+import { STATEMENTS, activeSource, getStatement, type Statement } from '../../data/math/bank'
 import type { StatementKind } from '../../data/math/types'
 
 const ANCHOR: ReadonlySet<StatementKind> = new Set([
@@ -35,19 +35,28 @@ function hostFor(example: Statement, index: number): Statement | null {
   return before ?? after
 }
 
-const attached = new Map<string, string[]>()
+let attachedSource = ''
+let attached = new Map<string, string[]>()
 
-STATEMENTS.forEach((item, index) => {
-  if (item.kind !== 'example') return
-  const host = hostFor(item, index)
-  if (!host) return
-  const list = attached.get(host.id) ?? []
-  list.push(item.id)
-  attached.set(host.id, list)
-})
+function exampleMap(): Map<string, string[]> {
+  const sourceId = activeSource().id
+  if (attachedSource === sourceId) return attached
+  const next = new Map<string, string[]>()
+  STATEMENTS.forEach((item, index) => {
+    if (item.kind !== 'example') return
+    const host = hostFor(item, index)
+    if (!host) return
+    const list = next.get(host.id) ?? []
+    list.push(item.id)
+    next.set(host.id, list)
+  })
+  attached = next
+  attachedSource = sourceId
+  return attached
+}
 
 export function examplesOf(id: string): Statement[] {
-  return (attached.get(id) ?? []).flatMap((exampleId) => {
+  return (exampleMap().get(id) ?? []).flatMap((exampleId) => {
     const example = getStatement(exampleId)
     return example ? [example] : []
   })

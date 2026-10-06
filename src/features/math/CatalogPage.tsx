@@ -64,7 +64,7 @@ export function CatalogPage({ mode }: { mode: 'all' | 'learned' }) {
             type="search"
             value={query}
             data-testid="math-search"
-            placeholder="Номер, название или слова из формулировки"
+            placeholder="Номер, название или слова из текста"
             onChange={(event) => setQuery(event.target.value)}
           />
         </label>

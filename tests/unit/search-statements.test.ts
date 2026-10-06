@@ -1,7 +1,26 @@
 import assert from 'node:assert/strict'
 import { describe, it } from 'node:test'
-import { STATEMENTS } from '../../src/data/math/bank.ts'
-import { normalizeMathQuery, searchStatements } from '../../src/features/math/search.ts'
+import { STATEMENTS, type Statement } from '../../src/data/math/bank.ts'
+import { normalizeMathQuery, scoreStatement, searchStatements } from '../../src/features/math/search.ts'
+
+function statement(partial: Pick<Statement, 'id' | 'title'> & Partial<Statement>): Statement {
+  return {
+    kind: 'theorem',
+    number: null,
+    sectionId: '1',
+    sectionTitle: '',
+    bookPage: 1,
+    bookPages: [1],
+    text: '',
+    mentions: [],
+    dependsOn: [],
+    formulation: null,
+    latex: null,
+    pageSrc: '',
+    pageSrcs: [],
+    ...partial,
+  }
+}
 
 describe('поиск положений', () => {
   it('нормализует ё и знаки', () => {
@@ -25,5 +44,33 @@ describe('поиск положений', () => {
 
   it('пустой запрос ничего не возвращает', () => {
     assert.deepEqual(searchStatements('   ', STATEMENTS), [])
+  })
+
+  it('находит команду из LaTeX слабее, чем название', () => {
+    const titled = statement({ id: 'titled', title: 'Supset в заголовке' })
+    const buried = statement({
+      id: 'buried',
+      title: 'Вложенные отрезки',
+      latex: String.raw`[a_n,b_n]\supset[a_{n+1},b_{n+1}]`,
+    })
+    const found = searchStatements('supset', [buried, titled], 5)
+    assert.deepEqual(
+      found.map((item) => item.id),
+      ['titled', 'buried'],
+    )
+    assert.ok(scoreStatement(titled, 'supset') > scoreStatement(buried, 'supset'))
+  })
+
+  it('находит supset в определении вложенных отрезков', () => {
+    const found = searchStatements('supset', STATEMENTS, 20)
+    assert.equal(found.some((item) => item.id === 'def-2.3-1'), true)
+  })
+
+  it('прощает пропущенную букву в длинном слове из текста', () => {
+    const found = searchStatements('стягивающася', STATEMENTS, 8)
+    assert.equal(
+      found.some((item) => item.id === 'def-2.3-1' || item.id === 'thm-2.7'),
+      true,
+    )
   })
 })

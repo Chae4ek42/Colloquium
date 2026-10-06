@@ -1,11 +1,12 @@
 import type { AppPage } from '../lib/types'
 import { PATHS, shouldHandleClientNav } from '../lib/routes'
 import { navItems } from '../lib/pages'
-import type { RefObject, ChangeEvent } from 'react'
+import type { ReactNode, RefObject, ChangeEvent } from 'react'
 
 export interface AppHeaderProps {
   currentPage: AppPage
   onNavigate: (page: AppPage) => void
+  toolbar?: ReactNode
   accountName?: string
   onSignOut?: () => void
   onExportBackup?: () => void
@@ -19,6 +20,7 @@ const NAV_ITEMS = navItems('primary')
 export function AppHeader({
   currentPage,
   onNavigate,
+  toolbar,
   accountName,
   onSignOut,
   onExportBackup,
@@ -46,6 +48,7 @@ export function AppHeader({
         </div>
 
         <div className="site-header-actions">
+          {toolbar}
           {accountName ? <span className="site-account-name">{accountName}</span> : null}
           {onSignOut ? (
             <button type="button" className="text-button" data-testid="sign-out" onClick={onSignOut}>

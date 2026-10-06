@@ -1,6 +1,5 @@
-import { STATEMENTS, getStatement, type Statement } from '../../data/math/bank'
+import { STATEMENTS, getStatement, shortName, type Statement } from '../../data/math/bank'
 import type { StatementKind } from '../../data/math/types'
-import { SHORT_NAME } from './names'
 import { splitParts } from './present'
 
 export interface Citation {
@@ -108,7 +107,7 @@ function previousOfKind(contextId: string | undefined, kind: StatementKind): str
 function noteFor(statement: Statement): string {
   const reason = WHY[statement.id]
   if (reason) return reason
-  const name = SHORT_NAME[statement.id]
+  const name = shortName(statement.id)
   const sentence = plainFormulation(statement).slice(0, 160)
   return name ? `${name}. ${sentence}` : sentence
 }

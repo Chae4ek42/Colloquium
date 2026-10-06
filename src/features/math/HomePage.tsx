@@ -1,17 +1,23 @@
 import { useState } from 'react'
-import { QUESTIONS, getStatement, questionId } from '../../data/math/bank'
+import { QUESTIONS, getStatement, listSources, questionId } from '../../data/math/bank'
+import { LEGACY_STREAM_KEY, readScopedRaw, streamStorageKey } from '../../data/math/source'
 import { useProgress } from './progress'
+import { useMathSource } from './SourceContext'
 import { StatementCard } from './StatementCard'
 import { STREAM_FILTERS, visibleItems, type StreamFilter } from './streams'
 import { LearnedButton, streamText } from './ui'
 import '../home/styles.css'
 import './styles.css'
 
-const STREAM_KEY = 'colloquium-stream-v1'
-
-function readStream(key: string): StreamFilter {
+function readStream(sourceId: string): StreamFilter {
   try {
-    const saved = localStorage.getItem(key)
+    const saved = readScopedRaw(
+      localStorage,
+      sourceId,
+      streamStorageKey(sourceId),
+      LEGACY_STREAM_KEY,
+      listSources()[0]?.id ?? sourceId,
+    )
     if (STREAM_FILTERS.some((item) => item.id === saved)) return saved as StreamFilter
   } catch {
     /* выбор потока остаётся «все вопросы» */
@@ -21,11 +27,12 @@ function readStream(key: string): StreamFilter {
 
 export function ColloquiumHome() {
   const progress = useProgress()
-  const [stream, setStream] = useState<StreamFilter>(() => readStream(STREAM_KEY))
+  const { sourceId } = useMathSource()
+  const [stream, setStream] = useState<StreamFilter>(() => readStream(sourceId))
 
   function choose(next: StreamFilter) {
     setStream(next)
-    localStorage.setItem(STREAM_KEY, next)
+    localStorage.setItem(streamStorageKey(sourceId), next)
   }
 
   const questions = QUESTIONS.map((question) => ({

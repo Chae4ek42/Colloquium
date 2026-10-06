@@ -282,7 +282,7 @@ export function GraphPage() {
             <input
               value={query}
               onChange={(event) => setQuery(event.target.value)}
-              placeholder="Номер или слова из названия"
+              placeholder="Номер, название или слова из текста"
               type="search"
               autoComplete="off"
             />

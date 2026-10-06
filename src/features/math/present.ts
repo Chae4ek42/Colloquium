@@ -1,10 +1,9 @@
-import { KIND_LABEL, flowText, type Statement } from '../../data/math/bank'
-import { SHORT_NAME } from './names'
+import { KIND_LABEL, flowText, shortName, type Statement } from '../../data/math/bank'
 
 export function displayName(statement: Statement): string {
   const kind = KIND_LABEL[statement.kind]
   const number = statement.number
-  const short = SHORT_NAME[statement.id]
+  const short = shortName(statement.id)
   const head = number ? `${kind} ${number}` : kind
   if (short) return `${head}. ${short}`
   if (statement.kind === 'example') return 'Пример'

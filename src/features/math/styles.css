@@ -25,6 +25,97 @@
   gap: 14px;
 }
 
+.math-book {
+  position: relative;
+  min-width: 0;
+  max-width: min(16rem, calc(100vw - 10rem));
+}
+
+.math-book-trigger {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  min-height: 32px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: #111;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.math-book-title {
+  overflow: hidden;
+  font-size: 0.92rem;
+  font-weight: 500;
+  line-height: 1.2;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.math-book-note,
+.math-book-option-author {
+  color: #a3a3a3;
+  font-weight: 400;
+}
+
+.math-book-chevron {
+  flex: none;
+  width: 12px;
+  height: 12px;
+  color: #9a9a9a;
+}
+
+.math-book-menu {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  z-index: 40;
+  display: grid;
+  width: max(100%, 15rem);
+  max-width: calc(100vw - 24px);
+  margin: 0;
+  padding: 6px 0;
+  list-style: none;
+  border: 1px solid rgba(17, 17, 17, 0.08);
+  background: #fff;
+}
+
+.math-book-option {
+  display: grid;
+  gap: 1px;
+  width: 100%;
+  padding: 7px 14px;
+  border: 0;
+  background: transparent;
+  color: #111;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.math-book-option:hover .math-book-option-title {
+  color: #111;
+}
+
+.math-book-option-title {
+  font-size: 0.9rem;
+  font-weight: 500;
+  line-height: 1.3;
+  color: #8a8a8a;
+}
+
+.math-book-option.is-active .math-book-option-title {
+  color: #111;
+}
+
+.math-book-option-author {
+  font-size: 0.75rem;
+  line-height: 1.3;
+}
+
 .math-stream-filter {
   display: flex;
   flex-wrap: wrap;

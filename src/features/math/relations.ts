@@ -1,13 +1,15 @@
-import { STATEMENTS, getStatement, type Statement } from '../../data/math/bank'
+import { STATEMENTS, activeSource, getStatement, type Statement } from '../../data/math/bank'
 import type { StatementKind } from '../../data/math/types'
 import { findCitations } from './citations'
 
 const CONSEQUENCE: Set<StatementKind> = new Set(['theorem', 'lemma', 'corollary'])
 
+let priorSource = ''
 let priors: Map<string, string[]> | null = null
 
 function priorMap(): Map<string, string[]> {
-  if (priors) return priors
+  const sourceId = activeSource().id
+  if (priors && priorSource === sourceId) return priors
   const map = new Map<string, string[]>()
   for (const item of STATEMENTS) {
     const source = item.latex?.trim() || item.formulation || ''
@@ -16,6 +18,7 @@ function priorMap(): Map<string, string[]> {
     map.set(item.id, [...new Set([...item.dependsOn, ...cited, ...mentioned])])
   }
   priors = map
+  priorSource = sourceId
   return map
 }
 
