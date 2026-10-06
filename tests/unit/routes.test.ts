@@ -76,7 +76,7 @@ describe('routes', () => {
     const { PAGE_META, navItems } = await import('../../src/shared/lib/pages.ts')
     assert.equal(navItems('primary').length > 0, true)
     assert.equal(navItems('primary').some((page) => page.id === 'train'), true)
-    assert.equal(navItems('primary').some((page) => page.id === 'graph'), false)
+    assert.equal(navItems('primary').some((page) => page.id === 'graph'), true)
     assert.equal(navItems('primary').some((page) => page.id === 'catalog'), true)
     assert.equal(navItems('primary').some((page) => page.id === 'learned'), true)
     assert.equal(navItems('primary').some((page) => page.id === 'vocab'), false)

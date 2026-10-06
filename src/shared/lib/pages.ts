@@ -300,7 +300,6 @@ const HIDDEN_FROM_NAV = new Set<AppPage>([
   'mine',
   'theory',
   'analytics',
-  'graph',
 ])
 
 export function navItems(group: Exclude<NavGroup, 'none'>): PageMeta[] {

@@ -21,23 +21,18 @@
 }
 
 .math-graph-lead,
-.math-graph-sub,
 .math-graph-quiet,
-.math-graph-meta,
-.math-graph-count,
-.math-graph-focus-title {
+.math-graph-count {
   margin: 0;
   color: #111;
 }
 
 .math-graph-lead {
-  max-width: 42rem;
+  max-width: 46rem;
   line-height: 1.4;
 }
 
-.math-graph-sub,
 .math-graph-quiet,
-.math-graph-meta,
 .math-graph-count {
   font-size: 0.92rem;
   line-height: 1.4;
@@ -55,14 +50,14 @@
 
 .math-graph-stage {
   display: grid;
-  grid-template-rows: auto minmax(0, 1fr);
+  grid-template-rows: auto auto minmax(0, 1fr);
   position: relative;
   min-height: 0;
   height: 100%;
   border: 1px solid #e7e7e7;
   border-radius: 22px;
-  background-color: #f4f4f4;
-  background-image: radial-gradient(#d0d0d0 1px, transparent 1px);
+  background-color: #f7f6f3;
+  background-image: radial-gradient(#e1ddd4 1px, transparent 1px);
   background-size: 18px 18px;
   overflow: hidden;
 }
@@ -88,80 +83,156 @@
   align-items: center;
   justify-content: space-between;
   gap: 8px;
-  padding: 8px 10px;
-  border-bottom: 1px solid #ececec;
+  padding: 8px 10px 4px;
   background: rgba(255, 255, 255, 0.92);
 }
 
-.math-graph-fit,
-.math-graph-hit {
-  border: 1px solid #111;
+.math-graph-tool-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.math-graph-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 12px;
+  margin: 0;
+  padding: 0 12px 8px;
+  list-style: none;
+  background: rgba(255, 255, 255, 0.92);
+  border-bottom: 1px solid #ececec;
+  font-size: 0.78rem;
+}
+
+.math-graph-legend li {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #333;
+}
+
+.math-graph-legend li::before {
+  content: '';
+  width: 8px;
+  height: 8px;
+  border-radius: 99px;
+  background: var(--kind, #444);
+}
+
+.math-graph-legend li.is-learned::before {
+  background: #1b7a45;
+  box-shadow: inset 0 0 0 2px #fff, inset 0 0 0 8px #1b7a45;
+}
+
+.math-graph-legend li[data-kind='definition'] { --kind: #1b7a45; }
+.math-graph-legend li[data-kind='theorem'] { --kind: #b42318; }
+.math-graph-legend li[data-kind='lemma'] { --kind: #1d4f91; }
+.math-graph-legend li[data-kind='remark'] { --kind: #c2410c; }
+.math-graph-legend li[data-kind='corollary'] { --kind: #6d28d9; }
+.math-graph-legend li[data-kind='axiom'] { --kind: #0f766e; }
+.math-graph-legend li[data-kind='principle'] { --kind: #a16207; }
+.math-graph-legend li[data-kind='example'],
+.math-graph-legend li[data-kind='exercise'] { --kind: #525252; }
+
+.math-graph-fit {
+  border: 1px solid #d8d8d8;
   background: #fff;
   color: #111;
   font: inherit;
   cursor: pointer;
-}
-
-.math-graph-fit {
   padding: 6px 12px;
   border-radius: 999px;
   font-size: 0.84rem;
 }
 
-.math-graph-fit:hover,
-.math-graph-hit:hover,
-.math-graph-hit.is-current {
-  background: #111;
-  color: #fff;
+.math-graph-fit:hover {
+  border-color: #111;
 }
 
 .math-graph-edge {
   fill: none;
-  stroke: #8d8d8d;
-  stroke-width: 1.35;
+  stroke-width: 1.7;
   stroke-linecap: round;
   stroke-linejoin: round;
+  opacity: 0.55;
+}
+
+.math-graph-edge.is-dim {
+  opacity: 0.12;
+}
+
+.math-graph-caption {
+  fill: #666;
+  font-size: 13px;
+  font-weight: 650;
+  font-family: Manrope, 'Segoe UI', sans-serif;
 }
 
 .math-graph-node {
   cursor: pointer;
+  --kind: #444;
 }
 
-.math-graph-node rect {
+.math-graph-node[data-kind='definition'] { --kind: #1b7a45; }
+.math-graph-node[data-kind='theorem'] { --kind: #b42318; }
+.math-graph-node[data-kind='lemma'] { --kind: #1d4f91; }
+.math-graph-node[data-kind='remark'] { --kind: #c2410c; }
+.math-graph-node[data-kind='corollary'] { --kind: #6d28d9; }
+.math-graph-node[data-kind='axiom'] { --kind: #0f766e; }
+.math-graph-node[data-kind='principle'] { --kind: #a16207; }
+.math-graph-node[data-kind='example'],
+.math-graph-node[data-kind='exercise'] { --kind: #525252; }
+
+.math-graph-card {
   fill: #fff;
-  stroke: #111;
-  stroke-width: 1.15;
-  filter: drop-shadow(0 8px 16px rgba(17, 17, 17, 0.06));
+  stroke: var(--kind);
+  stroke-width: 1.6;
 }
 
-.math-graph-node.is-current rect {
-  fill: #111;
-  stroke: #111;
+.math-graph-bar {
+  fill: var(--kind);
+}
+
+.math-graph-halo {
+  fill: none;
+  stroke: var(--kind);
+  stroke-width: 6;
+  opacity: 0.28;
+}
+
+.math-graph-node.is-learned .math-graph-card {
+  fill: color-mix(in srgb, var(--kind) 14%, white);
+}
+
+.math-graph-node.is-dim {
+  opacity: 0.22;
 }
 
 .math-graph-node text {
-  fill: #111;
+  fill: #1a1a1a;
   font-family: Manrope, 'Segoe UI', sans-serif;
   pointer-events: none;
 }
 
-.math-graph-node.is-current text {
-  fill: #fff;
-}
-
 .math-graph-badge {
-  font-size: 12px;
-  font-weight: 700;
+  fill: var(--kind);
+  font-size: 11px;
+  font-weight: 750;
 }
 
 .math-graph-label {
   font-size: 13px;
-  font-weight: 500;
+  font-weight: 550;
 }
 
-.math-graph-node:hover rect,
-.math-graph-node:focus-visible rect {
-  stroke-width: 2.5;
+.math-graph-check circle {
+  fill: var(--kind);
+}
+
+.math-graph-node:hover .math-graph-card,
+.math-graph-node:focus-visible .math-graph-card {
+  stroke-width: 2.6;
 }
 
 .math-graph-node:focus {
@@ -219,54 +290,6 @@
   outline-offset: 1px;
 }
 
-.math-graph-hits {
-  display: grid;
-  gap: 0;
-  max-height: 280px;
-  margin: 0;
-  padding: 0;
-  overflow: auto;
-  list-style: none;
-  border: 1px solid #111;
-}
-
-.math-graph-hit {
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr);
-  gap: 8px;
-  align-items: baseline;
-  width: 100%;
-  padding: 8px 10px;
-  border: 0;
-  border-bottom: 1px solid #bbb;
-  text-align: left;
-}
-
-.math-graph-hits li:last-child .math-graph-hit {
-  border-bottom: 0;
-}
-
-.math-graph-hit-badge {
-  font-weight: 700;
-}
-
-.math-graph-hit-title {
-  line-height: 1.35;
-}
-
-.math-graph-focus {
-  display: grid;
-  gap: 8px;
-  padding-top: 12px;
-  border-top: 1px solid #111;
-}
-
-.math-graph-focus-title {
-  font-size: 1.02rem;
-  font-weight: 650;
-  line-height: 1.35;
-}
-
 .math-graph-open,
 .math-graph-open:visited,
 .math-graph-open:hover {
@@ -278,14 +301,15 @@
 .math-graph-focus-line {
   display: flex;
   justify-content: space-between;
-  gap: 10px;
-  align-items: baseline;
+  gap: 8px;
+  align-items: center;
   margin: 0;
   font-weight: 650;
 }
 
-.math-graph-focus-line span {
+.math-graph-focus-line > span {
   min-width: 0;
+  flex: 1;
 }
 
 .math-graph-toc {
@@ -294,12 +318,19 @@
 }
 
 .math-graph-toc-group h2 {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
   margin: 0 0 6px;
   font-size: 0.78rem;
   font-weight: 650;
   letter-spacing: 0;
   text-transform: none;
   color: #666;
+}
+
+.math-graph-toc-group h2 span {
+  font-variant-numeric: tabular-nums;
 }
 
 .math-graph-toc-group ul {
@@ -312,11 +343,20 @@
 
 .math-graph-toc-group li {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-columns: minmax(0, 1fr) 14px auto;
   gap: 8px;
-  align-items: baseline;
+  align-items: center;
   padding: 4px 0;
+  --kind: #111;
 }
+
+.math-graph-toc-group li[data-kind='definition'] { --kind: #1b7a45; }
+.math-graph-toc-group li[data-kind='theorem'] { --kind: #b42318; }
+.math-graph-toc-group li[data-kind='lemma'] { --kind: #1d4f91; }
+.math-graph-toc-group li[data-kind='remark'] { --kind: #c2410c; }
+.math-graph-toc-group li[data-kind='corollary'] { --kind: #6d28d9; }
+.math-graph-toc-group li[data-kind='axiom'] { --kind: #0f766e; }
+.math-graph-toc-group li[data-kind='principle'] { --kind: #a16207; }
 
 .math-graph-toc-group li.is-current .math-link {
   font-weight: 750;
@@ -335,10 +375,28 @@
 
 .math-graph-toc a,
 .math-graph-toc a:visited {
-  color: #111;
+  color: var(--kind);
 }
 
-@media (max-width: 720px) {
+.math-graph-mini-check {
+  width: 14px;
+  height: 14px;
+  border-radius: 99px;
+  background: var(--kind, #1b7a45);
+  box-shadow: inset 0 0 0 2px #fff, inset 0 0 0 7px var(--kind, #1b7a45);
+}
+
+.math-graph-mini-gap,
+.math-graph-off {
+  display: block;
+}
+
+.math-graph-off {
+  color: #999;
+  font-size: 0.72rem;
+}
+
+@media (max-width: 980px) {
   .math-graph-page {
     height: auto;
   }
