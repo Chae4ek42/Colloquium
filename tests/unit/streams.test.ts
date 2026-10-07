@@ -20,14 +20,31 @@ describe('фильтр вопросов по потоку', () => {
     assert.ok(visibleItems(infinitesimals, 'other').length > 0)
   })
 
-  it('оставляет Иванову компактность, а Редкозубову только открытые и замкнутые', () => {
+  it('показывает Иванову и Редкозубову открытые, замкнутые и критерий компактности', () => {
     const topology = QUESTIONS.find((question) => question.number === 15)
     assert.ok(topology)
     const ivanov = visibleItems(topology, 'Г.Е. Иванов').map((item) => item.statementId)
     const redkozubov = visibleItems(topology, 'В.В. Редкозубов').map((item) => item.statementId)
-    assert.ok(ivanov.includes('thm-3.2'))
-    assert.equal(redkozubov.includes('thm-3.2'), false)
-    assert.ok(redkozubov.includes('def-3-2'))
+    for (const id of ['def-3-2', 'def-3-3', 'thm-3.1', 'def-3-5', 'thm-3.2', 'cor-3-2']) {
+      assert.ok(ivanov.includes(id), id)
+      assert.ok(redkozubov.includes(id), id)
+    }
     assert.equal(visibleItems(topology, 'other').length, 0)
+    assert.equal(visibleItems(topology, 'Е.Ю. Редкозубова').length, 0)
+  })
+
+  it('билет Редкозубова содержит положения, из которых состоит ответ', () => {
+    const ids = (number: number) => {
+      const question = QUESTIONS.find((item) => item.number === number)
+      assert.ok(question)
+      return visibleItems(question, 'В.В. Редкозубов').map((item) => item.statementId)
+    }
+    assert.ok(ids(2).includes('ax-1-2'))
+    assert.ok(ids(16).includes('def-3-3'))
+    assert.ok(ids(18).includes('def-4.4-2') && ids(18).includes('cor-4.4-1'))
+    assert.ok(ids(19).includes('rem-4.5-1') && ids(19).includes('thm-4.4'))
+    assert.ok(ids(21).includes('lem-4.2'))
+    assert.ok(ids(22).includes('lem-4.3'))
+    assert.ok(ids(23).includes('cor-4.6-1') && ids(23).includes('lem-4.4'))
   })
 })

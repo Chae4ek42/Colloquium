@@ -2,6 +2,7 @@ import assert from 'node:assert/strict'
 import { describe, it } from 'node:test'
 import { DEPENDS } from '../../src/data/math/depends.ts'
 import { FORMULATIONS } from '../../src/data/math/formulations.ts'
+import { LATEX } from '../../src/data/math/latex/index.ts'
 import { EXAM_QUESTIONS } from '../../src/data/math/questions.ts'
 import { STATEMENTS, getStatement } from '../../src/data/math/bank.ts'
 
@@ -80,6 +81,27 @@ describe('коллоквиум', () => {
       assert.ok(statement, id)
       assert.ok(flat(statement.text).includes(phrase), `${id} text`)
       assert.ok(flat(FORMULATIONS[id] ?? '').length > 8, id)
+    }
+  })
+
+  it('лемма из доказательства лежит в том же билете', () => {
+    const lemmaByNumber = new Map<string, string>()
+    for (const statement of STATEMENTS) {
+      if (statement.kind === 'lemma' && statement.number) {
+        lemmaByNumber.set(statement.number.replace(/[′']/g, "'"), statement.id)
+      }
+    }
+    const cite = /лемм[а-яё]*\s+(\d+\.\d+[′']?|\d+)/gi
+    for (const question of EXAM_QUESTIONS) {
+      const present = new Set(question.items.map((item) => item.statementId))
+      for (const item of question.items) {
+        const text = LATEX[item.statementId] ?? ''
+        for (const match of text.matchAll(cite)) {
+          const id = lemmaByNumber.get(match[1].replace(/[′']/g, "'"))
+          assert.ok(id, `${item.statementId} ссылается на лемму ${match[1]}`)
+          assert.equal(present.has(id), true, `вопрос ${question.number}: ${item.statementId} использует ${id}`)
+        }
+      }
     }
   })
 

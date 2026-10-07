@@ -25,6 +25,8 @@ export const EXAM_QUESTIONS: ExamQuestion[] = [
     items: [
       { statementId: 'def-1-5', label: 'Ограниченное множество' },
       { statementId: 'def-1-6', label: 'Точная верхняя и точная нижняя грани' },
+      { statementId: 'def-1-3', label: '«Лежит левее» и разделяющий элемент' },
+      { statementId: 'ax-1-2', label: 'Аксиома полноты' },
       { statementId: 'thm-1.5', label: 'Теорема 1.5, принцип полноты Вейерштрасса' },
     ],
   },
@@ -73,6 +75,7 @@ export const EXAM_QUESTIONS: ExamQuestion[] = [
     title: 'Свойства пределов, связанные с неравенствами.',
     items: [
       { statementId: 'thm-2.3', label: 'Теорема 2.3 о пределе в неравенствах' },
+      { statementId: 'rem-2.1-2', label: 'Строгие неравенства не сохраняются' },
       { statementId: 'thm-2.4', label: 'Теорема 2.4 о зажатой последовательности' },
     ],
   },
@@ -81,6 +84,7 @@ export const EXAM_QUESTIONS: ExamQuestion[] = [
     title: 'Теорема о пределе ограниченной монотонной последовательности.',
     items: [
       { statementId: 'def-2.2-1', label: 'Монотонная последовательность' },
+      { statementId: 'rem-2.2-1', label: 'Сравнение несоседних членов' },
       { statementId: 'thm-2.6', label: 'Теорема 2.6' },
     ],
   },
@@ -124,6 +128,7 @@ export const EXAM_QUESTIONS: ExamQuestion[] = [
     streams: { except: ['В.В. Редкозубов', 'Е.Ю. Редкозубова'] },
     note: 'В пособии это следствие после теоремы 2.10: конечный предел есть тогда и только тогда, когда верхний и нижний пределы совпадают. По теореме 2.10 они являются наибольшим и наименьшим частичными пределами.',
     items: [
+      { statementId: 'lem-2.2', label: 'Предел подпоследовательности' },
       { statementId: 'thm-2.10', label: 'Крайние частичные пределы' },
       { statementId: 'cor-2.5-1', label: 'Следствие о совпадении верхнего и нижнего пределов' },
     ],
@@ -168,14 +173,49 @@ export const EXAM_QUESTIONS: ExamQuestion[] = [
         streams: { only: ['Г.Е. Иванов', 'В.В. Редкозубов'] },
       },
       {
+        statementId: 'def-3-3',
+        label: 'Предельная точка',
+        streams: { only: ['Г.Е. Иванов', 'В.В. Редкозубов'] },
+      },
+      {
+        statementId: 'lem-3.2',
+        label: 'Предельная точка и последовательность',
+        streams: { only: ['Г.Е. Иванов', 'В.В. Редкозубов'] },
+      },
+      {
         statementId: 'thm-3.1',
         label: 'Критерии замкнутости',
         streams: { only: ['Г.Е. Иванов', 'В.В. Редкозубов'] },
       },
       {
+        statementId: 'def-3-4',
+        label: 'Замыкание',
+        streams: { only: ['Г.Е. Иванов', 'В.В. Редкозубов'] },
+      },
+      {
+        statementId: 'lem-3.3',
+        label: 'Замыкание замкнуто',
+        streams: { only: ['Г.Е. Иванов', 'В.В. Редкозубов'] },
+      },
+      {
+        statementId: 'cor-3-1',
+        label: 'Точки замыкания и последовательности',
+        streams: { only: ['Г.Е. Иванов', 'В.В. Редкозубов'] },
+      },
+      {
+        statementId: 'def-3-5',
+        label: 'Открытое покрытие',
+        streams: { only: ['Г.Е. Иванов', 'В.В. Редкозубов'] },
+      },
+      {
         statementId: 'thm-3.2',
-        label: 'Теорема 3.2 Гейне — Борель, критерий компактности отрезка',
-        streams: { only: ['Г.Е. Иванов'] },
+        label: 'Теорема 3.2 Гейне — Борель',
+        streams: { only: ['Г.Е. Иванов', 'В.В. Редкозубов'] },
+      },
+      {
+        statementId: 'cor-3-2',
+        label: 'Конечное подпокрытие замкнутого ограниченного множества',
+        streams: { only: ['Г.Е. Иванов', 'В.В. Редкозубов'] },
       },
     ],
   },
@@ -184,9 +224,11 @@ export const EXAM_QUESTIONS: ExamQuestion[] = [
     title: 'Определение предела функции в точке по Коши и по Гейне, их эквивалентность.',
     items: [
       { statementId: 'prose-3-2', label: 'Окрестность и проколотая окрестность' },
+      { statementId: 'def-3-3', label: 'Предельная точка' },
       { statementId: 'def-4.1', label: 'Определение 4.1 по Коши' },
       { statementId: 'def-4.1-1', label: 'Предел на языке неравенств' },
       { statementId: 'def-4.2', label: 'Определение 4.2 по Гейне' },
+      { statementId: 'rem-4.1-2', label: 'Последовательность в проколотой окрестности' },
       { statementId: 'thm-4.1', label: 'Теорема 4.1, равносильность определений' },
     ],
   },
@@ -200,7 +242,9 @@ export const EXAM_QUESTIONS: ExamQuestion[] = [
     title: 'Существование односторонних пределов у монотонных функций.',
     items: [
       { statementId: 'def-4.4-1', label: 'Односторонние пределы' },
+      { statementId: 'def-4.4-2', label: 'Монотонная функция' },
       { statementId: 'thm-4.3', label: 'Теорема 4.3' },
+      { statementId: 'cor-4.4-1', label: 'Односторонние пределы во внутренней точке' },
     ],
   },
   {
@@ -209,6 +253,7 @@ export const EXAM_QUESTIONS: ExamQuestion[] = [
       'Непрерывность функции в точке. Непрерывность сложной функции. Эквивалентные условия непрерывности.',
     items: [
       { statementId: 'def-4.5-1', label: 'Непрерывность в точке' },
+      { statementId: 'rem-4.5-1', label: 'Изолированная точка' },
       { statementId: 'thm-4.5', label: 'Теорема 4.5 о непрерывности композиции' },
       {
         statementId: 'thm-4.4',
@@ -229,19 +274,29 @@ export const EXAM_QUESTIONS: ExamQuestion[] = [
     number: 21,
     title: 'Достижение точной верхней и точной нижней граней функции, непрерывной на отрезке.',
     note: 'Для потоков Н.А. Гусева, Г.Е. Иванова, В.В. Редкозубова, Е.Ю. Редкозубовой и А.А. Скубачевского вопросы 21 и 22 составляют содержание одного билета.',
-    items: [{ statementId: 'thm-4.7', label: 'Теорема 4.7 Вейерштрасса' }],
+    items: [
+      { statementId: 'lem-4.2', label: 'Лемма 4.2 об ограниченности' },
+      { statementId: 'thm-4.7', label: 'Теорема 4.7 Вейерштрасса' },
+    ],
   },
   {
     number: 22,
     title: 'Теорема о промежуточных значениях непрерывной функции.',
-    items: [{ statementId: 'thm-4.8', label: 'Теорема 4.8 Коши' }],
+    items: [
+      { statementId: 'lem-4.3', label: 'Лемма о корне' },
+      { statementId: 'thm-4.8', label: 'Теорема 4.8 Коши' },
+    ],
   },
   {
     number: 23,
     title:
       'Теорема об обратной функции.',
     streams: { except: ['Н.А. Гусев', 'Л.Н. Знаменская', 'Е.Ю. Редкозубова'] },
-    items: [{ statementId: 'thm-4.9', label: 'Теорема 4.9' }],
+    items: [
+      { statementId: 'cor-4.6-1', label: 'Образ промежутка — промежуток' },
+      { statementId: 'lem-4.4', label: 'Монотонность и промежуток значений влекут непрерывность' },
+      { statementId: 'thm-4.9', label: 'Теорема 4.9' },
+    ],
   },
 ]
 
