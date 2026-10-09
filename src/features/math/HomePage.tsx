@@ -1,11 +1,11 @@
 import { useState } from 'react'
-import { QUESTIONS, getStatement, listSources, questionId } from '../../data/math/bank'
+import { QUESTIONS, listSources, questionId } from '../../data/math/bank'
 import { LEGACY_STREAM_KEY, readScopedRaw, streamStorageKey } from '../../data/math/source'
+import { QuestionStatements } from './QuestionStatements'
 import { useProgress } from './progress'
 import { useMathSource } from './SourceContext'
-import { StatementCard } from './StatementCard'
 import { STREAM_FILTERS, visibleItems, type StreamFilter } from './streams'
-import { LearnedButton, streamText } from './ui'
+import { LearnedButton } from './ui'
 import '../home/styles.css'
 import './styles.css'
 
@@ -59,7 +59,6 @@ export function ColloquiumHome() {
       <div className="math-questions">
         {questions.map(({ question, items }) => {
           const learnedCount = items.filter((item) => progress.isLearned(item.statementId)).length
-          const mark = stream === 'all' ? streamText(question.streams) : null
           return (
             <details key={question.number} className="math-question" data-testid={`question-${question.number}`}>
               <summary>
@@ -70,22 +69,13 @@ export function ColloquiumHome() {
                 </span>
                 <LearnedButton id={questionId(question.number)} />
               </summary>
-              <div className="math-question-body">
-                {mark ? <p className="math-stream">{mark}</p> : null}
-                {question.note ? <p className="math-note">{question.note}</p> : null}
-                <div className="math-bento-stack">
-                  {items.map((item) => {
-                    const statement = getStatement(item.statementId)
-                    const itemMark = stream === 'all' ? streamText(item.streams) : null
-                    return (
-                      <div key={`${question.number}-${item.statementId}-${item.label}`} className="math-question-item">
-                        {itemMark ? <p className="math-stream">{itemMark}</p> : null}
-                        {statement ? <StatementCard statement={statement} fold /> : <p>Положение не найдено.</p>}
-                      </div>
-                    )
-                  })}
-                </div>
-              </div>
+              <QuestionStatements
+                questionNumber={question.number}
+                items={items}
+                note={question.note}
+                streams={stream === 'all' ? question.streams : undefined}
+                showItemMarks={stream === 'all'}
+              />
             </details>
           )
         })}

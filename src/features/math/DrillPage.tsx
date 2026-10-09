@@ -1,11 +1,11 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { QUESTIONS, getStatement, questionId } from '../../data/math/bank'
+import { QUESTIONS, questionId } from '../../data/math/bank'
 import { usePracticeSession } from '../../shared/lib/usePracticeSession'
 import { PracticeShell } from '../../shared/ui/PracticeShell'
 import { ShortcutNote } from '../../shared/ui/ShortcutNote'
 import { pickWeighted } from './drill'
 import { useProgress } from './progress'
-import { StatementBody, StatementLink } from './ui'
+import { QuestionStatements } from './QuestionStatements'
 import './styles.css'
 import './drill-ui.css'
 
@@ -25,6 +25,7 @@ interface LatestDrill {
   view: string
   stats: ReturnType<typeof useProgress>['state']['stats']
   reveal: () => void
+  conceal: () => void
   grade: (known: boolean) => void
   step: (direction: -1 | 1) => void
 }
@@ -78,6 +79,7 @@ export function DrillPage() {
     view,
     stats: progress.state.stats,
     reveal: () => {},
+    conceal: () => {},
     grade: () => {},
     step: () => {},
   })
@@ -149,6 +151,16 @@ export function DrillPage() {
     setRevealed(true)
   }
 
+  function conceal() {
+    if (view !== 'practice' || !current || !revealed || pendingAdvanceRef.current) return
+    setRevealed(false)
+  }
+
+  function toggleAnswer() {
+    if (latest.current.revealed) latest.current.conceal()
+    else latest.current.reveal()
+  }
+
   function grade(known: boolean) {
     if (view !== 'practice' || !current || !revealed || pendingAdvanceRef.current) return
     progress.answer(current, known)
@@ -164,6 +176,7 @@ export function DrillPage() {
     view,
     stats: progress.state.stats,
     reveal,
+    conceal,
     grade,
     step,
   }
@@ -176,7 +189,9 @@ export function DrillPage() {
 
       const target = event.target instanceof HTMLElement ? event.target : null
       if (target?.closest('a, input, textarea, select')) return
-      const onButton = Boolean(target?.closest('button'))
+      const onGrade = Boolean(
+        target?.closest('[data-testid="drill-known"], [data-testid="drill-unknown"], [data-testid="drill-show"]'),
+      )
 
       if (event.code === 'ArrowLeft') {
         event.preventDefault()
@@ -189,9 +204,10 @@ export function DrillPage() {
         return
       }
       if (event.code === 'Space') {
-        if (onButton) return
+        if (onGrade) return
         event.preventDefault()
-        if (!ctx.revealed) ctx.reveal()
+        if (ctx.revealed) ctx.conceal()
+        else ctx.reveal()
       }
     }
     window.addEventListener('keydown', onKeyDown)
@@ -287,8 +303,8 @@ export function DrillPage() {
       swipes={{
         onSwipeLeft: () => step(-1),
         onSwipeRight: () => step(1),
-        onSwipeDown: reveal,
-        onSwipeUp: reveal,
+        onSwipeDown: toggleAnswer,
+        onSwipeUp: toggleAnswer,
       }}
     >
       {hasCard ? (
@@ -301,21 +317,15 @@ export function DrillPage() {
           </div>
 
           <div className="answer-block drill-answer-block">
-            {revealed ? (
+            {revealed && question ? (
               <div className="drill-reveal">
-                {question ? (
-                  <ol className="math-items">
-                    {question.items.map((item) => {
-                      const linked = getStatement(item.statementId)
-                      return (
-                        <li key={item.statementId}>
-                          <StatementLink id={item.statementId}>{item.label}</StatementLink>
-                          {linked ? <StatementBody statement={linked} /> : null}
-                        </li>
-                      )
-                    })}
-                  </ol>
-                ) : null}
+                <QuestionStatements
+                  questionNumber={question.number}
+                  items={question.items}
+                  note={question.note}
+                  streams={question.streams}
+                  showItemMarks
+                />
               </div>
             ) : (
               <p className="drill-hint-text">Вспомните ответ, затем нажмите «Показать»</p>
@@ -343,10 +353,10 @@ export function DrillPage() {
               <ShortcutNote
                 keyboard={
                   <>
-                    <kbd>←</kbd>/<kbd>→</kbd> — листать · <kbd>Space</kbd> — ответ
+                    <kbd>←</kbd>/<kbd>→</kbd> — листать · <kbd>Space</kbd> — показать или скрыть ответ
                   </>
                 }
-                swipe={<>Свайп ←/→ — листать · вниз/вверх — ответ</>}
+                swipe={<>Свайп ←/→ — листать · вниз/вверх — показать или скрыть ответ</>}
               />
             </div>
           </div>

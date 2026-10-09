@@ -63,18 +63,23 @@ export const EXAM_QUESTIONS: ExamQuestion[] = [
       { statementId: 'rem-2.1-4', label: 'Предел и бесконечно малая добавка' },
       { statementId: 'ex-2.1-6', label: 'Произведение бесконечно малой и ограниченной' },
       { statementId: 'thm-2.5', label: 'Арифметика пределов, из неё свойства сумм и произведений' },
+      { statementId: 'rem-2.1-5', label: 'Сумма конечного числа бесконечно малых' },
     ],
   },
   {
     number: 6,
     title: 'Арифметические операции со сходящимися последовательностями.',
-    items: [{ statementId: 'thm-2.5', label: 'Теорема 2.5' }],
+    items: [
+      { statementId: 'thm-2.5', label: 'Теорема 2.5' },
+      { statementId: 'lem-2.1', label: 'Конечное число членов не влияет на предел' },
+    ],
   },
   {
     number: 7,
     title: 'Свойства пределов, связанные с неравенствами.',
     items: [
       { statementId: 'thm-2.3', label: 'Теорема 2.3 о пределе в неравенствах' },
+      { statementId: 'rem-2.1-6', label: 'Предел не превосходит постоянную границу хвоста' },
       { statementId: 'rem-2.1-2', label: 'Строгие неравенства не сохраняются' },
       { statementId: 'thm-2.4', label: 'Теорема 2.4 о зажатой последовательности' },
     ],
@@ -86,6 +91,7 @@ export const EXAM_QUESTIONS: ExamQuestion[] = [
       { statementId: 'def-2.2-1', label: 'Монотонная последовательность' },
       { statementId: 'rem-2.2-1', label: 'Сравнение несоседних членов' },
       { statementId: 'thm-2.6', label: 'Теорема 2.6' },
+      { statementId: 'thm-2.6p', label: 'Неограниченная монотонная последовательность' },
     ],
   },
   {
@@ -114,6 +120,7 @@ export const EXAM_QUESTIONS: ExamQuestion[] = [
     items: [
       { statementId: 'def-2.5-3', label: 'Верхний и нижний пределы' },
       { statementId: 'thm-2.10', label: 'Теорема 2.10' },
+      { statementId: 'rem-2.5-4', label: 'Описание верхнего и нижнего пределов неравенствами' },
     ],
   },
   {
@@ -131,6 +138,7 @@ export const EXAM_QUESTIONS: ExamQuestion[] = [
       { statementId: 'lem-2.2', label: 'Предел подпоследовательности' },
       { statementId: 'thm-2.10', label: 'Крайние частичные пределы' },
       { statementId: 'cor-2.5-1', label: 'Следствие о совпадении верхнего и нижнего пределов' },
+      { statementId: 'ex-2.5-5', label: 'Без ограниченности единственный конечный частичный предел не даёт сходимости' },
     ],
   },
   {
@@ -228,6 +236,7 @@ export const EXAM_QUESTIONS: ExamQuestion[] = [
       { statementId: 'def-4.1', label: 'Определение 4.1 по Коши' },
       { statementId: 'def-4.1-1', label: 'Предел на языке неравенств' },
       { statementId: 'def-4.2', label: 'Определение 4.2 по Гейне' },
+      { statementId: 'rem-4.1-4', label: 'Значение в самой точке в предел не входит' },
       { statementId: 'rem-4.1-2', label: 'Последовательность в проколотой окрестности' },
       { statementId: 'thm-4.1', label: 'Теорема 4.1, равносильность определений' },
     ],
@@ -258,7 +267,7 @@ export const EXAM_QUESTIONS: ExamQuestion[] = [
       {
         statementId: 'thm-4.4',
         label: 'Теорема 4.4, эквивалентные условия непрерывности',
-        streams: { only: ['В.В. Редкозубов', 'Е.Ю. Редкозубова'] },
+        streams: { only: ['Н.А. Гусев', 'В.В. Редкозубов', 'Е.Ю. Редкозубова'] },
       },
     ],
   },
@@ -268,6 +277,7 @@ export const EXAM_QUESTIONS: ExamQuestion[] = [
     items: [
       { statementId: 'def-4.6-1', label: 'Непрерывность на множестве' },
       { statementId: 'lem-4.2', label: 'Лемма 4.2' },
+      { statementId: 'ex-4.6-4', label: 'На полуинтервале непрерывность не даёт ограниченности' },
     ],
   },
   {
@@ -293,6 +303,7 @@ export const EXAM_QUESTIONS: ExamQuestion[] = [
       'Теорема об обратной функции.',
     streams: { except: ['Н.А. Гусев', 'Л.Н. Знаменская', 'Е.Ю. Редкозубова'] },
     items: [
+      { statementId: 'def-1-8', label: 'Промежуток' },
       { statementId: 'cor-4.6-1', label: 'Образ промежутка — промежуток' },
       { statementId: 'lem-4.4', label: 'Монотонность и промежуток значений влекут непрерывность' },
       { statementId: 'thm-4.9', label: 'Теорема 4.9' },
