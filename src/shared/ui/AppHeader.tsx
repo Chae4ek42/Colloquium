@@ -1,7 +1,7 @@
 import type { AppPage } from '../lib/types'
 import { PATHS, shouldHandleClientNav } from '../lib/routes'
 import { navItems } from '../lib/pages'
-import type { ReactNode, RefObject, ChangeEvent } from 'react'
+import type { ReactNode } from 'react'
 
 export interface AppHeaderProps {
   currentPage: AppPage
@@ -10,9 +10,6 @@ export interface AppHeaderProps {
   accountName?: string
   onSignOut?: () => void
   onExportBackup?: () => void
-  onImportBackup?: () => void
-  importInputRef?: RefObject<HTMLInputElement | null>
-  onImportFileChange?: (event: ChangeEvent<HTMLInputElement>) => void
 }
 
 const NAV_ITEMS = navItems('primary')
@@ -24,9 +21,6 @@ export function AppHeader({
   accountName,
   onSignOut,
   onExportBackup,
-  onImportBackup,
-  importInputRef,
-  onImportFileChange,
 }: AppHeaderProps) {
   return (
     <header className="site-header">
@@ -59,21 +53,6 @@ export function AppHeader({
             <button type="button" className="text-button" data-testid="export-backup" onClick={onExportBackup}>
               Экспорт
             </button>
-          ) : null}
-          {onImportBackup ? (
-            <button type="button" className="text-button" data-testid="import-backup" onClick={onImportBackup}>
-              Импорт
-            </button>
-          ) : null}
-          {importInputRef && onImportFileChange ? (
-            <input
-              ref={importInputRef}
-              type="file"
-              accept="application/json,.json"
-              className="visually-hidden"
-              data-testid="import-backup-file"
-              onChange={onImportFileChange}
-            />
           ) : null}
         </div>
       </div>

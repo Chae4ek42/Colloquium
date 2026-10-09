@@ -108,7 +108,7 @@ function AppRoutes() {
   const appState = useAppState()
   const { storageReady } = useAccounts()
   const { page, statementId, navigate, goPage } = useAppRouter()
-  const { exportBackup, openImportPicker, fileInputRef, onImportFileChange, canExport } = useBackupApp()
+  const { exportBackup, canExport } = useBackupApp()
   const { applyActiveDeltas } = useAnalyticsState()
 
   useActiveTimeTracker({
@@ -135,9 +135,6 @@ function AppRoutes() {
               onNavigate={goPage}
               toolbar={<SourceSelect />}
               onExportBackup={canExport ? exportBackup : undefined}
-              onImportBackup={openImportPicker}
-              importInputRef={fileInputRef}
-              onImportFileChange={onImportFileChange}
             />
             <AppPageView page={page} statementId={statementId} onNavigate={goPage} />
           </div>
