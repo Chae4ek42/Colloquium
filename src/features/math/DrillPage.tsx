@@ -6,6 +6,8 @@ import { ShortcutNote } from '../../shared/ui/ShortcutNote'
 import { pickWeighted } from './drill'
 import { useProgress } from './progress'
 import { QuestionStatements } from './QuestionStatements'
+import { StreamPicker, useSavedStream } from './StreamPicker'
+import { visibleItems } from './streams'
 import './styles.css'
 import './drill-ui.css'
 
@@ -37,7 +39,8 @@ function buildPool(scope: Scope, learned: Set<string>, included: number[]): stri
   return scope === 'all' ? ids : ids.filter((id) => learned.has(id))
 }
 
-function emptyPoolReason(scope: Scope, includedCount: number): string {
+function emptyPoolReason(scope: Scope, streamCount: number, includedCount: number): string {
+  if (streamCount === 0) return 'Для этого потока вопросов нет.'
   if (includedCount === 0) return 'Добавьте хотя бы один вопрос справа.'
   if (scope === 'learned') return 'Среди выбранных вопросов выученных нет. Отметьте их на главной или выберите «Все».'
   return 'Здесь пока нечего спрашивать.'
@@ -59,6 +62,7 @@ export function DrillPage() {
     recordAnswered,
   } = usePracticeSession()
 
+  const { stream, choose } = useSavedStream()
   const [scope, setScope] = useState<Scope>('all')
   const [included, setIncluded] = useState<number[]>(() => QUESTIONS.map((question) => question.number))
   const [current, setCurrent] = useState<string | null>(null)
@@ -66,9 +70,16 @@ export function DrillPage() {
   const trail = useRef<string[]>([])
   const trailAt = useRef(-1)
 
+  const streamQuestions = useMemo(
+    () => QUESTIONS.filter((question) => visibleItems(question, stream).length > 0),
+    [stream],
+  )
+  const includedNumbers = streamQuestions
+    .map((question) => question.number)
+    .filter((number) => included.includes(number))
   const ids = useMemo(
-    () => buildPool(scope, progress.learned, included),
-    [scope, progress.learned, included],
+    () => buildPool(scope, progress.learned, includedNumbers),
+    [scope, progress.learned, includedNumbers],
   )
   const canStart = ids.length > 0
 
@@ -228,6 +239,8 @@ export function DrillPage() {
           <p className="drill-lead">Вспоминайте формулировки вопросов по карточкам.</p>
         </header>
 
+        <StreamPicker stream={stream} onChoose={choose} />
+
         <div className="drill-setup-layout">
           <section className="setup-surface controls-panel drill-controls-panel" data-testid="drill-setup">
             <div className="control-group">
@@ -246,7 +259,9 @@ export function DrillPage() {
                 ))}
               </div>
               <p className="control-hint" data-testid="drill-pool-count">
-                {canStart ? `${ids.length} вопросов в тренировке` : emptyPoolReason(scope, included.length)}
+                {canStart
+                  ? `${ids.length} вопросов в тренировке`
+                  : emptyPoolReason(scope, streamQuestions.length, includedNumbers.length)}
               </p>
             </div>
 
@@ -266,7 +281,7 @@ export function DrillPage() {
           <aside className="drill-questions" data-testid="drill-questions">
             <h2>Вопросы</h2>
             <ul>
-              {QUESTIONS.map((question) => {
+              {streamQuestions.map((question) => {
                 const on = included.includes(question.number)
                 return (
                   <li key={question.number} className={on ? 'is-in' : 'is-out'}>
@@ -321,10 +336,10 @@ export function DrillPage() {
               <div className="drill-reveal">
                 <QuestionStatements
                   questionNumber={question.number}
-                  items={question.items}
+                  items={visibleItems(question, stream)}
                   note={question.note}
-                  streams={question.streams}
-                  showItemMarks
+                  streams={stream === 'all' ? question.streams : undefined}
+                  showItemMarks={stream === 'all'}
                 />
               </div>
             ) : (
