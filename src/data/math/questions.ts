@@ -120,6 +120,8 @@ export const EXAM_QUESTIONS: ExamQuestion[] = [
     items: [
       { statementId: 'def-2.5-3', label: 'Верхний и нижний пределы' },
       { statementId: 'thm-2.10', label: 'Теорема 2.10' },
+      { statementId: 'lem-2.2', label: 'Предел подпоследовательности' },
+      { statementId: 'cor-2.5-1', label: 'Следствие о совпадении верхнего и нижнего пределов' },
       { statementId: 'rem-2.5-4', label: 'Описание верхнего и нижнего пределов неравенствами' },
     ],
   },
@@ -269,6 +271,7 @@ export const EXAM_QUESTIONS: ExamQuestion[] = [
         label: 'Теорема 4.4, эквивалентные условия непрерывности',
         streams: { only: ['Н.А. Гусев', 'В.В. Редкозубов', 'Е.Ю. Редкозубова'] },
       },
+      { statementId: 'cor-4.5-1', label: 'Арифметика непрерывных функций' },
     ],
   },
   {

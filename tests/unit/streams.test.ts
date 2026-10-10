@@ -40,6 +40,8 @@ describe('фильтр вопросов по потоку', () => {
       return visibleItems(question, 'В.В. Редкозубов').map((item) => item.statementId)
     }
     assert.ok(ids(2).includes('ax-1-2'))
+    assert.ok(ids(11).includes('cor-2.5-1') && ids(11).includes('lem-2.2'))
+    assert.ok(ids(19).includes('cor-4.5-1'))
     assert.ok(ids(16).includes('def-3-3'))
     assert.ok(ids(18).includes('def-4.4-2') && ids(18).includes('cor-4.4-1'))
     assert.ok(ids(19).includes('rem-4.5-1') && ids(19).includes('thm-4.4'))
