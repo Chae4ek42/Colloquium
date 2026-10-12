@@ -144,7 +144,7 @@ export function DrillPage() {
     trail.current = []
     trailAt.current = -1
     latest.current = { ...latest.current, ids, current: null }
-    beginPractice({ poolIds: ids, mode: 'even' })
+    beginPractice()
     showNext()
   }
 

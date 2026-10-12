@@ -1,4 +1,4 @@
-import type { AppPage } from './types'
+import type { AppPage } from './pages'
 import { isKnownPagePath, pageFromPath, pathForPage as pathForPageId, titleForPage } from './pages'
 
 export type AppRoute = { page: AppPage; statementId?: string }

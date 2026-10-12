@@ -8,7 +8,7 @@ import {
   titleForRoute,
   type AppRoute,
 } from './routes'
-import type { AppPage } from './types'
+import type { AppPage } from './pages'
 
 function readPath(): string {
   return normalizePath(window.location.pathname)
@@ -56,14 +56,6 @@ export function useAppRouter() {
   }, [syncFromLocation])
 
   useEffect(() => {
-    if (pathname === '/vocab/train') {
-      navigate(pathForRoute({ page: 'train' }), { replace: true })
-      return
-    }
-    if (pathname === '/vocab/mine') {
-      navigate(pathForRoute({ page: 'mine' }), { replace: true })
-      return
-    }
     if (!isKnownPath(pathname)) {
       navigate(pathForRoute({ page: 'home' }), { replace: true })
     }

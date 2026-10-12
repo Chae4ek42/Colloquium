@@ -1,5 +1,5 @@
 import { useRef, type ReactNode } from 'react'
-import type { FeedbackState, SessionStats } from '../lib/types'
+import type { FeedbackState, SessionStats } from '../lib/usePracticeSession'
 import { useSwipeGestures, type SwipeGestureHandlers } from '../lib/useSwipeGestures'
 import { SessionChips } from './SessionChips'
 

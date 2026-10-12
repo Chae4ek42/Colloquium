@@ -1,4 +1,4 @@
-import type { SessionStats } from '../lib/types'
+import type { SessionStats } from '../lib/usePracticeSession'
 import { InfoTip } from './InfoTip'
 
 export interface SessionChipsProps {
