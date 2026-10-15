@@ -26,3 +26,31 @@ export function pickWeighted(
   }
   return ids[ids.length - 1] ?? null
 }
+
+/**
+ * Следующий билет режима «единожды».
+ * Пока в круге остались непоказанные билеты, повтор не выбирается.
+ * Когда круг пройден, начинается новый: предыдущие снова можно показать,
+ * но только что показанный билет не ставится первым, если в пуле есть другие.
+ */
+export function pickOnce(
+  ids: string[],
+  seen: readonly string[],
+  current: string | null,
+  stats: Record<string, DrillStat>,
+  random: number,
+): { id: string | null; seen: string[] } {
+  if (!ids.length) return { id: null, seen: [] }
+  const allowed = new Set(ids)
+  const seenNow = seen.filter((id) => allowed.has(id))
+  let remaining = ids.filter((id) => !seenNow.includes(id))
+  let round = seenNow
+  if (!remaining.length) {
+    remaining = ids.filter((id) => id !== current)
+    if (!remaining.length) remaining = ids
+    round = []
+  }
+  const id = pickWeighted(remaining, stats, 'even', random)
+  if (!id) return { id: null, seen: round }
+  return { id, seen: [...round, id] }
+}

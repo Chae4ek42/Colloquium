@@ -3,7 +3,7 @@ import { QUESTIONS, questionId } from '../../data/math/bank'
 import { usePracticeSession } from '../../shared/lib/usePracticeSession'
 import { PracticeShell } from '../../shared/ui/PracticeShell'
 import { ShortcutNote } from '../../shared/ui/ShortcutNote'
-import { pickWeighted } from './drill'
+import { pickOnce, pickWeighted } from './drill'
 import { useProgress } from './progress'
 import { QuestionStatements } from './QuestionStatements'
 import { StreamPicker, useSavedStream } from './StreamPicker'
@@ -12,10 +12,16 @@ import './styles.css'
 import './drill-ui.css'
 
 type Scope = 'all' | 'learned'
+type RepeatMode = 'repeat' | 'once'
 
 const SCOPE_OPTIONS: { id: Scope; label: string }[] = [
   { id: 'all', label: 'Все' },
   { id: 'learned', label: 'Только выученные' },
+]
+
+const REPEAT_OPTIONS: { id: RepeatMode; label: string }[] = [
+  { id: 'repeat', label: 'С повторами' },
+  { id: 'once', label: 'Единожды' },
 ]
 
 const ADVANCE_DELAY_MS = 220
@@ -26,6 +32,7 @@ interface LatestDrill {
   revealed: boolean
   view: string
   stats: ReturnType<typeof useProgress>['state']['stats']
+  once: boolean
   reveal: () => void
   conceal: () => void
   grade: (known: boolean) => void
@@ -64,11 +71,13 @@ export function DrillPage() {
 
   const { stream, choose } = useSavedStream()
   const [scope, setScope] = useState<Scope>('all')
+  const [repeatMode, setRepeatMode] = useState<RepeatMode>('repeat')
   const [included, setIncluded] = useState<number[]>(() => QUESTIONS.map((question) => question.number))
   const [current, setCurrent] = useState<string | null>(null)
   const [revealed, setRevealed] = useState(false)
   const trail = useRef<string[]>([])
   const trailAt = useRef(-1)
+  const seenRound = useRef<string[]>([])
 
   const streamQuestions = useMemo(
     () => QUESTIONS.filter((question) => visibleItems(question, stream).length > 0),
@@ -89,6 +98,7 @@ export function DrillPage() {
     revealed,
     view,
     stats: progress.state.stats,
+    once: false,
     reveal: () => {},
     conceal: () => {},
     grade: () => {},
@@ -110,14 +120,26 @@ export function DrillPage() {
 
   function showNext() {
     const live = latest.current
-    const candidates = live.ids.length > 1 ? live.ids.filter((id) => id !== live.current) : live.ids
-    const nextId = pickWeighted(candidates, live.stats, 'even', Math.random())
+    const nextId = live.once
+      ? pickRoundOnce(live)
+      : pickWeighted(
+          live.ids.length > 1 ? live.ids.filter((id) => id !== live.current) : live.ids,
+          live.stats,
+          'even',
+          Math.random(),
+        )
     if (!nextId) {
       stopPractice()
       return
     }
     remember(nextId)
     openCard(nextId)
+  }
+
+  function pickRoundOnce(live: LatestDrill): string | null {
+    const picked = pickOnce(live.ids, seenRound.current, live.current, live.stats, Math.random())
+    seenRound.current = picked.seen
+    return picked.id
   }
 
   function step(direction: -1 | 1) {
@@ -143,7 +165,8 @@ export function DrillPage() {
     if (!canStart) return
     trail.current = []
     trailAt.current = -1
-    latest.current = { ...latest.current, ids, current: null }
+    seenRound.current = []
+    latest.current = { ...latest.current, ids, current: null, once: repeatMode === 'once' }
     beginPractice()
     showNext()
   }
@@ -153,6 +176,7 @@ export function DrillPage() {
     endPractice()
     trail.current = []
     trailAt.current = -1
+    seenRound.current = []
     setCurrent(null)
     setRevealed(false)
   }
@@ -181,6 +205,7 @@ export function DrillPage() {
     revealed,
     view,
     stats: progress.state.stats,
+    once: repeatMode === 'once',
     reveal,
     conceal,
     grade,
@@ -257,6 +282,28 @@ export function DrillPage() {
                 {canStart
                   ? `${ids.length} вопросов в тренировке`
                   : emptyPoolReason(scope, streamQuestions.length, includedNumbers.length)}
+              </p>
+            </div>
+
+            <div className="control-group">
+              <span className="group-label">Показ</span>
+              <div className="segmented">
+                {REPEAT_OPTIONS.map((option) => (
+                  <button
+                    key={option.id}
+                    type="button"
+                    data-testid={`drill-repeat-${option.id}`}
+                    className={repeatMode === option.id ? 'segmented-button is-active' : 'segmented-button'}
+                    onClick={() => setRepeatMode(option.id)}
+                  >
+                    {option.label}
+                  </button>
+                ))}
+              </div>
+              <p className="control-hint">
+                {repeatMode === 'once'
+                  ? 'Каждый билет один раз за круг. Новый круг начинается, когда все выбранные билеты уже были.'
+                  : 'Один и тот же билет может выпасть снова, не дожидаясь конца круга.'}
               </p>
             </div>
 
