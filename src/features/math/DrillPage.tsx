@@ -167,11 +167,6 @@ export function DrillPage() {
     setRevealed(false)
   }
 
-  function toggleAnswer() {
-    if (latest.current.revealed) latest.current.conceal()
-    else latest.current.reveal()
-  }
-
   function grade(known: boolean) {
     if (view !== 'practice' || !current || !revealed || pendingAdvanceRef.current) return
     progress.answer(current, known)
@@ -318,8 +313,6 @@ export function DrillPage() {
       swipes={{
         onSwipeLeft: () => step(-1),
         onSwipeRight: () => step(1),
-        onSwipeDown: toggleAnswer,
-        onSwipeUp: toggleAnswer,
       }}
     >
       {hasCard ? (
@@ -371,7 +364,7 @@ export function DrillPage() {
                     <kbd>←</kbd>/<kbd>→</kbd> — листать · <kbd>Space</kbd> — показать или скрыть ответ
                   </>
                 }
-                swipe={<>Свайп ←/→ — листать · вниз/вверх — показать или скрыть ответ</>}
+                swipe={<>Свайп ←/→ — листать</>}
               />
             </div>
           </div>

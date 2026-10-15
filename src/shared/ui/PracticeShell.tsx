@@ -16,7 +16,7 @@ export interface PracticeShellProps {
   stopTestId?: string
   stopLabel?: string
   children?: ReactNode
-  /** Mobile swipe shortcuts (←→ Space Enter). Ignored on desktop. */
+  /** Mobile horizontal swipes. Ignored on desktop. */
   swipes?: SwipeGestureHandlers
   swipesEnabled?: boolean
 }
